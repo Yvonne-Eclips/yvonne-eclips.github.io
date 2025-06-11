@@ -15,38 +15,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const maxResults = 6; // Number of videos/shorts to display in each grid
 
-    // Helper function to parse ISO 8601 duration to seconds
-    function parseDuration(iso8601Duration) {
-        const p = /P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)D)?T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/;
-        const matches = p.exec(iso8601Duration);
-        if (!matches) return 0;
-
-        const years = parseInt(matches[1] || 0, 10);
-        const months = parseInt(matches[2] || 0, 10);
-        const days = parseInt(matches[3] || 0, 10);
-        const hours = parseInt(matches[4] || 0, 10);
-        const minutes = parseInt(matches[5] || 0, 10);
-        const seconds = parseInt(matches[6] || 0, 10);
-
-        return years * 31536000 + months * 2592000 + days * 86400 + hours * 3600 + minutes * 60 + seconds;
-    }
-
-    // Function to fetch the latest Shorts from the channel using search endpoint and videoDuration=short
-    // Now also includes aspect ratio check for more robust filtering
+    // Function to fetch the latest Shorts from the channel using search endpoint
+    // Now filters primarily by aspect ratio, without videoDuration=short API parameter
     async function fetchLatestShorts(containerElement) {
         let actualShorts = [];
         let nextPageToken = null;
         const ITEMS_PER_SEARCH_CALL = 50; // Max results per page for YouTube Search API
-        const VERTICAL_ASPECT_RATIO_THRESHOLD = 0.7; // Aspect ratio for vertical videos (height/width > 1.0)
-                                                    // or width/height < this for landscape.
-                                                    // Common Shorts are 9:16 (0.5625) or 3:4 (0.75)
+        const VERTICAL_ASPECT_RATIO_THRESHOLD = 0.9; // Aspect ratio for vertical videos (width/height < this)
 
         try {
             containerElement.innerHTML = '<p class="loading-message">Loading latest Shorts...</p>';
 
             // Loop to fetch pages until we have enough shorts or no more pages
             while (actualShorts.length < maxResults) {
-                let searchUrl = `https://www.googleapis.com/youtube/v3/search?part=id,snippet&channelId=${CHANNEL_ID}&type=video&order=date&videoDuration=short&key=${API_KEY}&maxResults=${ITEMS_PER_SEARCH_CALL}`;
+                // Fetch latest videos from the channel, ordered by date.
+                // Removed videoDuration=short filter from API call
+                let searchUrl = `https://www.googleapis.com/youtube/v3/search?part=id,snippet&channelId=${CHANNEL_ID}&type=video&order=date&key=${API_KEY}&maxResults=${ITEMS_PER_SEARCH_CALL}`;
                 if (nextPageToken) {
                     searchUrl += `&pageToken=${nextPageToken}`;
                 }
@@ -55,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const searchData = await searchResponse.json();
 
                 if (!searchData.items || searchData.items.length === 0) {
-                    // No more videos to process
+                    // No more videos to process or no content at all
                     break;
                 }
 
@@ -66,21 +50,20 @@ document.addEventListener('DOMContentLoaded', function() {
                     continue; // No valid video IDs, move to next page
                 }
 
-                // Fetch contentDetails for these video IDs to get their dimensions
+                // Fetch full video details for these video IDs to get thumbnail dimensions
                 const detailsResponse = await fetch(
-                    `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id=${videoIds.join(',')}&key=${API_KEY}`
+                    `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoIds.join(',')}&key=${API_KEY}`
                 );
                 const detailsData = await detailsResponse.json();
 
                 if (detailsData.items) {
+                    // Filter by aspect ratio: only include videos with a significantly vertical orientation
                     const filteredByAspectRatio = detailsData.items.filter(item => {
                         const width = item.snippet.thumbnails?.high?.width;
                         const height = item.snippet.thumbnails?.high?.height;
 
-                        // Check for vertical aspect ratio (height > width) or very close to it
-                        // A common short aspect ratio is 9:16, 3:4 etc. width/height will be < 1
                         if (width && height) {
-                             return (width / height) < VERTICAL_ASPECT_RATIO_THRESHOLD; // e.g., 0.7 for anything more vertical than ~16:9
+                             return (width / height) < VERTICAL_ASPECT_RATIO_THRESHOLD;
                         }
                         return false; // If no dimensions, filter it out
                     });
@@ -123,6 +106,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Function to fetch videos from a specific playlist (used for Latest Videos)
+    // No duration filtering is done here as it's playlist-based.
     async function fetchVideosFromPlaylist(playlistId, containerElement) {
         if (!playlistId) {
             containerElement.innerHTML = '<p class="loading-message">Error: Playlist ID for videos is missing or invalid. Please check your setup.</p>';
@@ -164,7 +148,62 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     // Function to fetch popular videos using the search endpoint
+    // No duration filtering is done here as it's sorted by viewCount.
     async function fetchPopularVideos(containerElement) {
         try {
+            containerElement.innerHTML = '<p class="loading-message">Loading most popular videos...</p>';
+
             const response = await fetch(
-              
+                `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${CHANNEL_ID}&type=video&order=viewCount&key=${API_KEY}&maxResults=${maxResults}`
+            );
+            const data = await response.json();
+
+            containerElement.innerHTML = ''; // Clear loading message
+
+            if (data.items && data.items.length > 0) {
+                data.items.forEach(item => {
+                    const videoId = item.id.videoId;
+                    const videoTitle = item.snippet.title;
+                    const thumbnailUrl = item.snippet.thumbnails.high.url;
+
+                    const popularItemDiv = document.createElement('div');
+                    popularItemDiv.classList.add('popular-item');
+
+                    const link = document.createElement('a');
+                    link.href = `https://www.youtube.com/watch?v=${videoId}`;
+                    link.target = "_blank";
+                    link.rel = "noopener noreferrer";
+
+                    const img = document.createElement('img');
+                    img.src = thumbnailUrl;
+                    img.alt = videoTitle;
+                    img.onerror = function() { this.src = 'https://placehold.co/160x90/333/eee?text=No+Image'; }; 
+
+                    const title = document.createElement('h3');
+                    title.textContent = videoTitle;
+
+                    link.appendChild(img);
+                    link.appendChild(title);
+                    popularItemDiv.appendChild(link);
+                    containerElement.appendChild(popularItemDiv);
+                });
+            } else {
+                containerElement.innerHTML = '<p class="loading-message">No popular videos found.</p>';
+            }
+        } catch (error) {
+            console.error('Error fetching popular videos:', error);
+            containerElement.innerHTML = '<p class="loading-message">Failed to load popular videos. Please check your API key and network connection, or API key restrictions.</p>';
+        }
+    }
+
+    // --- Initial Execution on Page Load ---
+
+    // For Latest Shorts
+    fetchLatestShorts(shortsContainer);
+
+    // For Latest Videos (now uses the specific playlist you provided)
+    fetchVideosFromPlaylist(LATEST_VIDEOS_PLAYLIST_ID, videosContainer);
+
+    // For Most Popular videos
+    fetchPopularVideos(popularContainer);
+});

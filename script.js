@@ -140,7 +140,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
         } catch (error) {
-            handleError(containerElement, 'Failed to load latest videos. Please check your API key and network connection, or API key restrictions.', error);
+            console.error('Error fetching latest long-form videos:', error);
+            containerElement.innerHTML = '<p class="loading-message">Failed to load latest videos. Please check your API key and network connection, or API key restrictions.</p>';
         }
     }
 
@@ -188,7 +189,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 containerElement.innerHTML = '<p class="loading-message">No popular videos found.</p>';
             }
         } catch (error) {
-            handleError(containerElement, 'Failed to load popular videos. Please check your API key and network connection, or API key restrictions.', error);
+            console.error('Error fetching popular videos:', error);
+            containerElement.innerHTML = '<p class="loading-message">Failed to load popular videos. Please check your API key and network connection, or API key restrictions.</p>';
         }
     }
 

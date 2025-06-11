@@ -2,8 +2,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const API_KEY = 'AIzaSyAI0Cxih1zjrX7o4wQnW68NCMBVFqztK-A'; // Your YouTube API Key
     const CHANNEL_ID = 'UCDwGOo8zxlGaXMpA4pmIHdA'; // Your YouTube Channel ID
 
+    // Playlist ID for your curated "Latest Videos" (excluding shorts)
+    // This will now be used directly for the 'videosContainer'
+    const LATEST_VIDEOS_PLAYLIST_ID = 'PLS15hKH3nTjlw51NsU8PFGcezq0jpoNUh'; 
+
     // Optional: If you have a dedicated public playlist for your Shorts, enter its ID here.
-    // This variable is no longer used for fetching 'latest shorts' directly, but kept for context.
     const SHORTS_PLAYLIST_ID = 'PLS15hKH3nTjkQGKa_MybUL8Wr4ykyHT35'; 
 
     const shortsContainer = document.getElementById('shorts-grid');
@@ -13,10 +16,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const maxResults = 6; // Number of videos/shorts to display in each grid
 
     // Helper function to parse ISO 8601 duration to seconds
+    // (Still included for potential future use or if 'short' filter is not perfect in API, though less critical now)
     function parseDuration(iso8601Duration) {
         const p = /P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)D)?T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/;
         const matches = p.exec(iso8601Duration);
-        if (!matches) return 0; // Return 0 if parsing fails
+        if (!matches) return 0;
 
         const years = parseInt(matches[1] || 0, 10);
         const months = parseInt(matches[2] || 0, 10);
@@ -48,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     iframe.frameBorder = "0";
                     iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
                     iframe.allowFullscreen = true;
-                    iframe.setAttribute('title', videoTitle); // Add title for accessibility
+                    iframe.setAttribute('title', videoTitle);
 
                     containerElement.appendChild(iframe);
                 });
@@ -61,69 +65,26 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Function to fetch the latest regular videos (excluding shorts by strict duration check)
-    async function fetchLatestVideos(containerElement) {
-        let longFormVideos = [];
-        let nextPageToken = null;
-        const SHORTS_MAX_DURATION_SECONDS = 65; // Defining shorts as <= 65 seconds to be safe
-        const ITEMS_PER_SEARCH_CALL = 50; // Max results per page for YouTube Search API
+    // Function to fetch videos from a specific playlist (used for Latest Videos)
+    async function fetchVideosFromPlaylist(playlistId, containerElement) {
+        if (!playlistId) {
+            containerElement.innerHTML = '<p class="loading-message">Error: Playlist ID for videos is missing or invalid. Please check your setup.</p>';
+            return;
+        }
 
         try {
             containerElement.innerHTML = '<p class="loading-message">Loading latest videos...</p>';
 
-            // Loop to fetch pages until we have enough long-form videos or no more pages
-            while (longFormVideos.length < maxResults) {
-                let searchUrl = `https://www.googleapis.com/youtube/v3/search?part=id,snippet&channelId=${CHANNEL_ID}&type=video&order=date&key=${API_KEY}&maxResults=${ITEMS_PER_SEARCH_CALL}`;
-                if (nextPageToken) {
-                    searchUrl += `&pageToken=${nextPageToken}`;
-                }
-
-                const searchResponse = await fetch(searchUrl);
-                const searchData = await searchResponse.json();
-
-                if (!searchData.items || searchData.items.length === 0) {
-                    // No more videos to process
-                    break;
-                }
-
-                // Collect video IDs from the current page
-                const videoIds = searchData.items.map(item => item.id.videoId).filter(id => id); // Filter out potential nulls
-
-                if (videoIds.length === 0) {
-                    nextPageToken = searchData.nextPageToken;
-                    continue; // No valid video IDs, move to next page
-                }
-
-                // Now fetch contentDetails (including duration) for these video IDs
-                const detailsResponse = await fetch(
-                    `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id=${videoIds.join(',')}&key=${API_KEY}`
-                );
-                const detailsData = await detailsResponse.json();
-
-                if (detailsData.items) {
-                    // Filter out shorts based on duration
-                    const filteredVideos = detailsData.items.filter(item => {
-                        const durationInSeconds = parseDuration(item.contentDetails.duration);
-                        return durationInSeconds > SHORTS_MAX_DURATION_SECONDS;
-                    });
-                    longFormVideos = longFormVideos.concat(filteredVideos);
-                }
-
-                nextPageToken = searchData.nextPageToken;
-                if (!nextPageToken) {
-                    // No more pages to fetch
-                    break;
-                }
-            }
+            const response = await fetch(
+                `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${playlistId}&key=${API_KEY}&maxResults=${maxResults}`
+            );
+            const data = await response.json();
 
             containerElement.innerHTML = ''; // Clear loading message
 
-            if (longFormVideos.length > 0) {
-                // Sort by published date (descending) and take only the top 'maxResults'
-                longFormVideos.sort((a, b) => new Date(b.snippet.publishedAt) - new Date(a.snippet.publishedAt));
-
-                longFormVideos.slice(0, maxResults).forEach(item => {
-                    const videoId = item.id; // From videos endpoint, 'id' is just the video ID string
+            if (data.items && data.items.length > 0) {
+                data.items.forEach(item => {
+                    const videoId = item.snippet.resourceId.videoId;
                     const videoTitle = item.snippet.title;
 
                     const iframe = document.createElement('iframe');
@@ -131,17 +92,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     iframe.frameBorder = "0";
                     iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
                     iframe.allowFullscreen = true;
-                    iframe.setAttribute('title', videoTitle); // Add title for accessibility
+                    iframe.setAttribute('title', videoTitle);
 
                     containerElement.appendChild(iframe);
                 });
             } else {
-                containerElement.innerHTML = '<p class="loading-message">No latest long-form videos found.</p>';
+                containerElement.innerHTML = '<p class="loading-message">No content found in this playlist.</p>';
             }
-
         } catch (error) {
-            console.error('Error fetching latest long-form videos:', error);
-            containerElement.innerHTML = '<p class="loading-message">Failed to load latest videos. Please check your API key and network connection, or API key restrictions.</p>';
+            console.error('Error fetching videos from playlist:', error);
+            containerElement.innerHTML = '<p class="loading-message">Failed to load videos. Please check your API key and network connection, or API key restrictions.</p>';
         }
     }
 
@@ -160,7 +120,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 data.items.forEach(item => {
                     const videoId = item.id.videoId;
                     const videoTitle = item.snippet.title;
-                    const thumbnailUrl = item.snippet.thumbnails.high.url; // 'high' for better quality
+                    const thumbnailUrl = item.snippet.thumbnails.high.url;
 
                     const popularItemDiv = document.createElement('div');
                     popularItemDiv.classList.add('popular-item');
@@ -168,12 +128,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     const link = document.createElement('a');
                     link.href = `https://www.youtube.com/watch?v=${videoId}`;
                     link.target = "_blank";
-                    link.rel = "noopener noreferrer"; // Security best practice
+                    link.rel = "noopener noreferrer";
 
                     const img = document.createElement('img');
                     img.src = thumbnailUrl;
                     img.alt = videoTitle;
-                    img.onerror = function() { this.src = 'https://placehold.co/160x90/333/eee?text=No+Image'; }; // Fallback for broken images
+                    img.onerror = function() { this.src = 'https://placehold.co/160x90/333/eee?text=No+Image'; };
 
                     const title = document.createElement('h3');
                     title.textContent = videoTitle;
@@ -197,8 +157,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // For Latest Shorts
     fetchLatestShorts(shortsContainer);
 
-    // For Latest Videos (excluding shorts by duration)
-    fetchLatestVideos(videosContainer);
+    // For Latest Videos (now uses the specific playlist you provided)
+    fetchVideosFromPlaylist(LATEST_VIDEOS_PLAYLIST_ID, videosContainer);
 
     // For Most Popular videos
     fetchPopularVideos(popularContainer);

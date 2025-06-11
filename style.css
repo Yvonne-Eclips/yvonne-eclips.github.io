@@ -1,0 +1,297 @@
+/* Basic Resets & Fonts */
+body {
+    font-family: 'Inter', sans-serif; /* Using Inter font, adjust if you prefer another */
+    margin: 0;
+    padding: 0;
+    background-color: #1a1a1a; /* Dark background */
+    color: #f0f0f0; /* Light text color */
+    line-height: 1.6;
+    scroll-behavior: smooth; /* Smooth scrolling for navigation links */
+}
+
+/* Header Styling */
+header {
+    background-color: #222;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+header .logo {
+    height: 80px; /* Adjust logo size */
+    width: auto;
+    border-radius: 8px; /* Rounded corners for logo */
+    margin-bottom: 10px;
+}
+
+header h1 {
+    color: #e91e63; /* Accent color for main title */
+    margin: 10px 0 5px;
+    font-size: 2.5em;
+}
+
+.tagline {
+    font-style: italic;
+    color: #aaa;
+    margin-bottom: 20px;
+}
+
+/* Navigation Bar */
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap; /* Allows navigation items to wrap on smaller screens */
+    gap: 20px;
+}
+
+nav ul li a {
+    color: #f0f0f0;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 8px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease; /* Added transform for animation */
+}
+
+nav ul li a:hover,
+nav ul li a:focus {
+    background-color: #e91e63;
+    color: #fff;
+    transform: translateY(-3px); /* Lift effect on hover */
+}
+
+/* Main Content Area */
+main {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0 20px;
+}
+
+/* Section Styling */
+section {
+    background-color: #2a2a2a;
+    padding: 30px;
+    margin-bottom: 30px;
+    border-radius: 10px; /* Rounded corners for sections */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+section h2 {
+    color: #e91e63;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2em;
+}
+
+/* Socials Section */
+.social-links {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    font-size: 3em; /* Larger icons */
+    flex-wrap: wrap;
+}
+
+.social-links a {
+    color: #f0f0f0;
+    transition: color 0.3s ease, transform 0.3s ease;
+    border-radius: 50%; /* Make icons look round if desired */
+    padding: 10px; /* Padding around icons */
+}
+
+.social-links a:hover {
+    color: #e91e63; /* Accent color on hover */
+    transform: translateY(-5px) scale(1.1); /* Lift and slight scale effect on hover */
+}
+
+/* Commissions Section */
+.commission-info {
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.8;
+}
+
+.commission-info h3 {
+    color: #f0f0f0;
+    margin-bottom: 15px;
+    font-size: 1.5em;
+    text-align: center;
+}
+
+.commission-info .status {
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.commission-info .status.open {
+    background-color: #4caf50; /* Green for open status */
+    color: white;
+}
+
+.commission-info .status.closed {
+    background-color: #f44336; /* Red for closed status */
+    color: white;
+}
+
+.commission-info ul {
+    list-style: none; /* Remove default bullet points */
+    padding: 0;
+    margin: 20px 0;
+}
+
+.commission-info ul li {
+    background-color: #333;
+    padding: 10px 15px;
+    margin-bottom: 8px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.commission-info ul li::before {
+    content: '✨'; /* Custom bullet point */
+    font-size: 1.2em;
+    line-height: 1;
+}
+
+.commission-info p {
+    margin-bottom: 15px;
+}
+
+.text-link {
+    color: #e91e63;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease, text-decoration 0.3s ease;
+}
+
+.text-link:hover {
+    color: #c8104e;
+    text-decoration: underline;
+}
+
+/* Video Grids (Latest Shorts, Latest Videos, Most Popular) */
+.video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsive columns */
+    gap: 20px;
+    justify-content: center;
+}
+
+.video-grid iframe,
+.video-grid .popular-item img {
+    width: 100%;
+    border-radius: 8px; /* Rounded corners for video embeds/thumbnails */
+    border: none;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+#latest-shorts .video-grid iframe {
+    aspect-ratio: 9 / 16; /* Standard vertical aspect ratio for shorts */
+}
+
+#latest-videos .video-grid iframe {
+    aspect-ratio: 16 / 9; /* Standard horizontal aspect ratio for videos */
+}
+
+#most-popular .video-grid .popular-item img {
+    aspect-ratio: 16 / 9; /* Assume popular items are mostly videos, adjust if many shorts */
+    object-fit: cover;
+}
+
+.loading-message {
+    text-align: center;
+    color: #aaa;
+    grid-column: 1 / -1; /* Center message across all columns */
+}
+
+.view-all {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.button {
+    display: inline-block;
+    background-color: #e91e63;
+    color: #fff;
+    padding: 12px 25px;
+    text-decoration: none;
+    border-radius: 8px; /* Rounded corners for buttons */
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease; /* Added box-shadow transition */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.button:hover {
+    background-color: #c8104e;
+    transform: translateY(-3px); /* Lift effect on hover */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4); /* More pronounced shadow */
+}
+
+/* Popular Item Specific Styling (for manual entries, if any) */
+.popular-item {
+    text-align: center;
+    background-color: #333;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.popular-item:hover {
+    transform: translateY(-5px) scale(1.02); /* Lift and slight scale */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+}
+
+.popular-item h3 {
+    font-size: 1.1em;
+    margin: 10px 0 0;
+    color: #f0f0f0;
+}
+
+/* Footer Styling */
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #222;
+    color: #aaa;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    margin-top: 30px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 2em;
+    }
+
+    nav ul {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    nav ul li a {
+        padding: 6px 12px;
+    }
+
+    .social-links {
+        font-size: 2.5em;
+        gap: 20px;
+    }
+
+    section {
+        padding: 20px;
+    }
+
+    .video-grid {
+        grid-template-columns: 1fr; /* Single column on very small screens */
+    }
+}

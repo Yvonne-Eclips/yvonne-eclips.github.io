@@ -64,9 +64,9 @@ document.addEventListener('DOMContentLoaded', function() {
     async function fetchLatestShorts(containerElement) {
         let shortsToDisplay = [];
         let nextPageToken = null;
-        // Aspect ratio for vertical videos (width/height less than this threshold)
-        // Common Shorts are 9:16 (0.5625) or 3:4 (0.75). Setting 0.7 filters out most landscape.
-        const VERTICAL_ASPECT_RATIO_THRESHOLD = 0.7; 
+        // Adjusted threshold: now wider to capture more vertical videos.
+        // A value of 1 means perfectly square. < 1 means vertical. 0.9 allows slightly wider vertical.
+        const VERTICAL_ASPECT_RATIO_THRESHOLD = 0.9; 
 
         try {
             containerElement.innerHTML = '<p class="loading-message">Loading latest Shorts...</p>';
@@ -74,8 +74,6 @@ document.addEventListener('DOMContentLoaded', function() {
             // Loop to fetch pages until we have enough shorts or no more pages
             while (shortsToDisplay.length < maxResults) {
                 // Fetch latest videos from the channel, ordered by date.
-                // We're intentionally NOT using videoDuration=short here, as it can be inconsistent.
-                // Instead, we will filter by aspect ratio.
                 let searchUrl = `https://www.googleapis.com/youtube/v3/search?part=id,snippet&channelId=${CHANNEL_ID}&type=video&order=date&key=${API_KEY}&maxResults=${ITEMS_PER_SEARCH_CALL}`;
                 if (nextPageToken) {
                     searchUrl += `&pageToken=${nextPageToken}`;
@@ -109,8 +107,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         const width = item.snippet.thumbnails?.high?.width;
                         const height = item.snippet.thumbnails?.high?.height;
 
-                        // Check if dimensions are available and the video is vertical
-                        return (width && height && (width / height) < VERTICAL_ASPECT_RATIO_THRESHOLD);
+                        if (width && height) {
+                            const aspectRatio = width / height;
+                            // console.log(`Video ID: ${item.id}, Width: ${width}, Height: ${height}, Aspect Ratio: ${aspectRatio}`); // For debugging
+                            return aspectRatio < VERTICAL_ASPECT_RATIO_THRESHOLD;
+                        }
+                        return false; // If no dimensions, filter it out
                     });
                     shortsToDisplay = shortsToDisplay.concat(filteredByAspectRatio);
                 }
@@ -129,8 +131,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 shortsToDisplay.sort((a, b) => new Date(b.snippet.publishedAt) - new Date(a.snippet.publishedAt));
 
                 shortsToDisplay.slice(0, maxResults).forEach(item => {
-                    // For the 'videos' API endpoint, 'item.id' directly holds the video ID string
-                    // For 'search' endpoint (which gives us item.id.videoId), we still rely on the 'videos' API for details.
                     const videoId = item.id; 
                     const videoTitle = item.snippet.title;
                     appendVideoIframe(containerElement, videoId, videoTitle);
@@ -167,7 +167,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (data.items && data.items.length > 0) {
                 data.items.forEach(item => {
-                    // For the 'playlistItems' API endpoint, video ID is in snippet.resourceId.videoId
                     const videoId = item.snippet.resourceId.videoId;
                     const videoTitle = item.snippet.title;
                     appendVideoIframe(containerElement, videoId, videoTitle);
@@ -198,9 +197,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (data.items && data.items.length > 0) {
                 data.items.forEach(item => {
-                    const videoId = item.id.videoId; // For 'search' endpoint, video ID is in item.id.videoId
+                    const videoId = item.id.videoId;
                     const videoTitle = item.snippet.title;
-                    const thumbnailUrl = item.snippet.thumbnails.high.url; // 'high' for better thumbnail quality
+                    const thumbnailUrl = item.snippet.thumbnails.high.url;
 
                     const popularItemDiv = document.createElement('div');
                     popularItemDiv.classList.add('popular-item');
@@ -208,12 +207,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     const link = document.createElement('a');
                     link.href = `https://www.youtube.com/watch?v=${videoId}`;
                     link.target = "_blank";
-                    link.rel = "noopener noreferrer"; // Security best practice
+                    link.rel = "noopener noreferrer";
 
                     const img = document.createElement('img');
                     img.src = thumbnailUrl;
                     img.alt = videoTitle;
-                    // Fallback for broken image links
                     img.onerror = function() { this.src = 'https://placehold.co/160x90/333/eee?text=No+Image'; }; 
 
                     const title = document.createElement('h3');

@@ -92,9 +92,10 @@ section h2 {
 .social-links {
     display: flex;
     justify-content: center;
+    align-items: center; /* Align items vertically in the center */
+    flex-wrap: wrap;
     gap: 30px;
     font-size: 3em; /* Larger icons */
-    flex-wrap: wrap;
 }
 
 .social-links a {
@@ -102,6 +103,17 @@ section h2 {
     transition: color 0.3s ease, transform 0.3s ease;
     border-radius: 50%; /* Make icons look round if desired */
     padding: 10px; /* Padding around icons */
+    display: flex; /* Use flex to center image inside a if it's not square */
+    justify-content: center;
+    align-items: center;
+    text-decoration: none; /* Remove underline for links */
+}
+
+.social-links a img {
+    height: 60px; /* Specific height for Buy Me a Coffee button image */
+    width: auto;
+    border-radius: 8px; /* Rounded corners for image */
+    box-shadow: none; /* Remove default shadow */
 }
 
 .social-links a:hover {
@@ -269,8 +281,16 @@ footer {
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
+    header .logo {
+        height: 60px; /* Smaller logo on mobile */
+    }
+
     header h1 {
-        font-size: 2em;
+        font-size: 2em; /* Smaller title on mobile */
+    }
+
+    .tagline {
+        font-size: 0.9em; /* Smaller tagline */
     }
 
     nav ul {
@@ -280,18 +300,84 @@ footer {
 
     nav ul li a {
         padding: 6px 12px;
+        font-size: 0.9em; /* Smaller navigation links */
     }
 
-    .social-links {
-        font-size: 2.5em;
-        gap: 20px;
+    main {
+        padding: 0 10px; /* Reduced side padding on main content */
     }
 
     section {
-        padding: 20px;
+        padding: 20px 15px; /* Reduced section padding */
+    }
+
+    section h2 {
+        font-size: 1.8em; /* Smaller section headings */
+    }
+
+    .social-links {
+        font-size: 2.2em; /* Slightly smaller icons */
+        gap: 15px; /* Reduced gap between icons */
+    }
+
+    .social-links a img {
+        height: 50px !important; /* Adjust Buy Me a Coffee button size for mobile */
+    }
+
+    .commission-info {
+        font-size: 0.95em; /* Slightly smaller text for commission info */
+    }
+
+    .commission-info ul li {
+        padding: 8px 12px;
     }
 
     .video-grid {
         grid-template-columns: 1fr; /* Single column on very small screens */
+        gap: 15px; /* Reduced gap in video grid */
+    }
+
+    /* Adjust iframe sizes for mobile if needed, though aspect-ratio helps */
+    .video-grid iframe {
+        width: 100%;
+        /* No specific height needed if aspect-ratio is set */
+    }
+
+    .button {
+        padding: 10px 20px;
+        font-size: 0.95em;
+    }
+
+    .popular-item {
+        padding: 10px;
+    }
+
+    .popular-item h3 {
+        font-size: 1em;
+    }
+
+    footer {
+        padding: 15px;
+        font-size: 0.85em;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Even smaller adjustments for extra small screens */
+    header h1 {
+        font-size: 1.8em;
+    }
+
+    .social-links {
+        font-size: 2em;
+        gap: 10px;
+    }
+
+    .social-links a img {
+        height: 45px !important;
+    }
+
+    .video-grid {
+        gap: 10px;
     }
 }

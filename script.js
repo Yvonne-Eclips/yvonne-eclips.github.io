@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const maxResults = 6; // Number of videos/shorts to display in each grid
 
     // Helper function to parse ISO 8601 duration to seconds
+    // (Still included for potential future use or if 'short' filter is not perfect in API)
     function parseDuration(iso8601Duration) {
         const p = /P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)D)?T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/;
         const matches = p.exec(iso8601Duration);
@@ -61,64 +62,22 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Function to fetch the latest regular videos (excluding shorts by duration)
+    // Function to fetch the latest videos (without filtering by duration)
     async function fetchLatestVideos(containerElement) {
-        let longFormVideos = [];
-        let nextPageToken = null;
-        const THRESHOLD_SECONDS_FOR_SHORTS = 60; // Videos 60 seconds or less are considered shorts
-        const ITEMS_PER_PAGE_SEARCH = 50; // Max results per page for YouTube Search API
-
         try {
             containerElement.innerHTML = '<p class="loading-message">Loading latest videos...</p>';
 
-            // Loop to fetch pages until we have enough long-form videos or no more pages
-            while (longFormVideos.length < maxResults) {
-                let url = `https://www.googleapis.com/youtube/v3/search?part=id,snippet&channelId=${CHANNEL_ID}&type=video&order=date&key=${API_KEY}&maxResults=${ITEMS_PER_PAGE_SEARCH}`;
-                if (nextPageToken) {
-                    url += `&pageToken=${nextPageToken}`;
-                }
-
-                const searchResponse = await fetch(url);
-                const searchData = await searchResponse.json();
-
-                if (!searchData.items || searchData.items.length === 0) {
-                    // No more videos to process
-                    break;
-                }
-
-                // Collect video IDs from the current page
-                const videoIds = searchData.items.map(item => item.id.videoId);
-
-                // Fetch contentDetails for these video IDs to get their durations
-                const detailsResponse = await fetch(
-                    `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id=${videoIds.join(',')}&key=${API_KEY}`
-                );
-                const detailsData = await detailsResponse.json();
-
-                if (detailsData.items) {
-                    // Filter out shorts based on duration and add to our collection
-                    const filteredVideos = detailsData.items.filter(item => {
-                        const durationInSeconds = parseDuration(item.contentDetails.duration);
-                        return durationInSeconds > THRESHOLD_SECONDS_FOR_SHORTS;
-                    });
-                    longFormVideos = longFormVideos.concat(filteredVideos);
-                }
-
-                nextPageToken = searchData.nextPageToken;
-                if (!nextPageToken) {
-                    // No more pages to fetch
-                    break;
-                }
-            }
+            // Fetch latest videos from the channel, ordered by date
+            const response = await fetch(
+                `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${CHANNEL_ID}&type=video&order=date&key=${API_KEY}&maxResults=${maxResults}`
+            );
+            const data = await response.json();
 
             containerElement.innerHTML = ''; // Clear loading message
 
-            if (longFormVideos.length > 0) {
-                // Sort by published date in case batches were out of order, and take only the required number
-                longFormVideos.sort((a, b) => new Date(b.snippet.publishedAt) - new Date(a.snippet.publishedAt));
-
-                longFormVideos.slice(0, maxResults).forEach(item => {
-                    const videoId = item.id; // From videos endpoint, 'id' is just the video ID string
+            if (data.items && data.items.length > 0) {
+                data.items.forEach(item => {
+                    const videoId = item.id.videoId; // Use item.id.videoId for search results
                     const videoTitle = item.snippet.title;
 
                     const iframe = document.createElement('iframe');
@@ -131,11 +90,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     containerElement.appendChild(iframe);
                 });
             } else {
-                containerElement.innerHTML = '<p class="loading-message">No latest long-form videos found.</p>';
+                containerElement.innerHTML = '<p class="loading-message">No latest videos found.</p>';
             }
-
         } catch (error) {
-            console.error('Error fetching latest long-form videos:', error);
+            console.error('Error fetching latest videos:', error);
             containerElement.innerHTML = '<p class="loading-message">Failed to load latest videos. Please check your API key and network connection, or API key restrictions.</p>';
         }
     }
@@ -191,7 +149,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // For Latest Shorts
     fetchLatestShorts(shortsContainer);
 
-    // For Latest Videos (excluding shorts by duration)
+    // For Latest Videos (no duration filter, will show both shorts and regular videos)
     fetchLatestVideos(videosContainer);
 
     // For Most Popular videos

@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- API Configuration ---
     // IMPORTANT: Replace these placeholders with your actual YouTube Data API Key and Channel ID.
     // Ensure your API key is restricted to your domain and the YouTube Data API v3 in Google Cloud Console.
-    const API_KEY = 'AIzaSyAI0Cxih1zjrX7o4wQnW68NCMBVFqztK-A'; // Your YouTube Data API Key
+    const API_KEY = 'AIzaSyBjvuH1MRK5r-7voc_03-JLfYuu8R3iS0w'; // Your YouTube Data API Key
     const CHANNEL_ID = 'UCDwGOo8zxlGaXMpA4pmIHdA'; // Your YouTube Channel ID (e.g., from youtube.com/account_advanced)
 
     // Playlist ID for your curated "Latest Videos" (if you want to override automatic fetching)

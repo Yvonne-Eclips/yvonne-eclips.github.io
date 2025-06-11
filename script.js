@@ -22,30 +22,51 @@ document.addEventListener('DOMContentLoaded', function() {
     const maxResults = 6; // Number of videos/shorts to display in each grid section
     const ITEMS_PER_SEARCH_CALL = 50; // Max results per page for YouTube Search API (helps for filtering)
 
-    // Helper function to parse ISO 8601 duration to seconds
-    // (Still included for potential future use or if 'short' filter is not perfect in API)
-    function parseDuration(iso8601Duration) {
-        const p = /P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)D)?T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/;
-        const matches = p.exec(iso8601Duration);
-        if (!matches) return 0; // Return 0 if parsing fails
+    // --- Helper Functions ---
 
-        const years = parseInt(matches[1] || 0, 10);
-        const months = parseInt(matches[2] || 0, 10);
-        const days = parseInt(matches[3] || 0, 10);
-        const hours = parseInt(matches[4] || 0, 10);
-        const minutes = parseInt(matches[5] || 0, 10);
-        const seconds = parseInt(matches[6] || 0, 10);
+    /**
+     * Creates and appends an iframe for a YouTube video to a given container.
+     * @param {HTMLElement} containerElement - The DOM element to append the iframe to.
+     * @param {string} videoId - The YouTube video ID.
+     * @param {string} videoTitle - The title of the video for accessibility.
+     */
+    function appendVideoIframe(containerElement, videoId, videoTitle) {
+        const iframe = document.createElement('iframe');
+        iframe.src = `https://www.youtube.com/embed/${videoId}`;
+        iframe.frameBorder = "0";
+        iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+        iframe.allowFullscreen = true;
+        iframe.setAttribute('title', videoTitle); // Essential for accessibility
 
-        return years * 31536000 + months * 2592000 + days * 86400 + hours * 3600 + minutes * 60 + seconds;
+        containerElement.appendChild(iframe);
     }
 
-    // Function to fetch the latest Shorts from the channel using search endpoint
-    // Now filters primarily by aspect ratio, without videoDuration=short API parameter
+    /**
+     * Handles common error display for API fetching.
+     * @param {HTMLElement} containerElement - The container to display the error in.
+     * @param {string} message - A user-friendly error message.
+     * @param {Error} error - The actual error object for console logging.
+     */
+    function handleError(containerElement, message, error) {
+        console.error(`Error fetching content: ${message}`, error);
+        containerElement.innerHTML = `<p class="loading-message error-message">${message}</p>`;
+    }
+
+
+    // --- Core Fetching Functions ---
+
+    /**
+     * Fetches the latest YouTube Shorts from the channel.
+     * This function primarily filters by video aspect ratio (vertical orientation),
+     * and uses the YouTube Data API's 'search' endpoint ordered by date.
+     * @param {HTMLElement} containerElement - The DOM element to display the shorts in.
+     */
     async function fetchLatestShorts(containerElement) {
         let shortsToDisplay = [];
         let nextPageToken = null;
-        const ITEMS_PER_SEARCH_CALL = 50; // Max results per page for YouTube Search API
-        const VERTICAL_ASPECT_RATIO_THRESHOLD = 0.9; // Aspect ratio for vertical videos (width/height < this)
+        // Aspect ratio for vertical videos (width/height less than this threshold)
+        // Common Shorts are 9:16 (0.5625) or 3:4 (0.75). Setting 0.7 filters out most landscape.
+        const VERTICAL_ASPECT_RATIO_THRESHOLD = 0.9; 
 
         try {
             containerElement.innerHTML = '<p class="loading-message">Loading latest Shorts...</p>';
@@ -53,7 +74,8 @@ document.addEventListener('DOMContentLoaded', function() {
             // Loop to fetch pages until we have enough shorts or no more pages
             while (shortsToDisplay.length < maxResults) {
                 // Fetch latest videos from the channel, ordered by date.
-                // Removed videoDuration=short filter from API call
+                // We're intentionally NOT using videoDuration=short here, as it can be inconsistent.
+                // Instead, we will filter by aspect ratio.
                 let searchUrl = `https://www.googleapis.com/youtube/v3/search?part=id,snippet&channelId=${CHANNEL_ID}&type=video&order=date&key=${API_KEY}&maxResults=${ITEMS_PER_SEARCH_CALL}`;
                 if (nextPageToken) {
                     searchUrl += `&pageToken=${nextPageToken}`;
@@ -111,15 +133,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 shortsToDisplay.slice(0, maxResults).forEach(item => {
                     const videoId = item.id; // From videos endpoint, 'id' is just the video ID string
                     const videoTitle = item.snippet.title;
-
-                    const iframe = document.createElement('iframe');
-                    iframe.src = `https://www.youtube.com/embed/${videoId}`;
-                    iframe.frameBorder = "0";
-                    iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
-                    iframe.allowFullscreen = true;
-                    iframe.setAttribute('title', videoTitle);
-
-                    containerElement.appendChild(iframe);
+                    appendVideoIframe(containerElement, videoId, videoTitle);
                 });
             } else {
                 containerElement.innerHTML = '<p class="loading-message">No latest Shorts found that match criteria.</p>';
@@ -129,11 +143,15 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Function to fetch videos from a specific playlist (used for Latest Videos)
-    // No duration filtering is done here as it's playlist-based.
+    /**
+     * Fetches videos from a specific YouTube playlist.
+     * This function is used for the 'Latest Videos' section to display curated content.
+     * @param {string} playlistId - The ID of the YouTube playlist.
+     * @param {HTMLElement} containerElement - The DOM element to display the videos in.
+     */
     async function fetchVideosFromPlaylist(playlistId, containerElement) {
         if (!playlistId) {
-            containerElement.innerHTML = '<p class="loading-message">Error: Playlist ID for Latest Videos is missing or invalid. Please check your setup.</p>';
+            handleError(containerElement, 'Playlist ID for Latest Videos is missing or invalid. Please check your setup.', null);
             return;
         }
 
@@ -151,15 +169,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 data.items.forEach(item => {
                     const videoId = item.snippet.resourceId.videoId;
                     const videoTitle = item.snippet.title;
-
-                    const iframe = document.createElement('iframe');
-                    iframe.src = `https://www.youtube.com/embed/${videoId}`;
-                    iframe.frameBorder = "0";
-                    iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
-                    iframe.allowFullscreen = true;
-                    iframe.setAttribute('title', videoTitle);
-
-                    containerElement.appendChild(iframe);
+                    appendVideoIframe(containerElement, videoId, videoTitle);
                 });
             } else {
                 containerElement.innerHTML = '<p class="loading-message">No content found in this playlist.</p>';
@@ -169,9 +179,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-
-    // Function to fetch popular videos using the search endpoint
-    // No duration filtering is done here as it's sorted by viewCount.
+    /**
+     * Fetches the most popular videos from the channel.
+     * This uses the YouTube Data API's 'search' endpoint ordered by viewCount.
+     * @param {HTMLElement} containerElement - The DOM element to display the popular videos in.
+     */
     async function fetchPopularVideos(containerElement) {
         try {
             containerElement.innerHTML = '<p class="loading-message">Loading most popular videos...</p>';

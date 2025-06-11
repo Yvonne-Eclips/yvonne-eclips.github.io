@@ -1,36 +1,97 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const API_KEY = 'AIzaSyAI0Cxih1zjrX7o4wQnW68NCMBVFqztK-A'; // Your YouTube API Key
-    const CHANNEL_ID = 'UCDwGOo8zxlGaXMpA4pmIHdA'; // Your YouTube Channel ID
+    // --- API Configuration ---
+    // IMPORTANT: Replace these placeholders with your actual YouTube Data API Key and Channel ID.
+    // Ensure your API key is restricted to your domain and the YouTube Data API v3 in Google Cloud Console.
+    const API_KEY = 'AIzaSyAI0Cxih1zjrX7o4wQnW68NCMBVFqztK-A'; // Your YouTube Data API Key
+    const CHANNEL_ID = 'UCDwGOo8zxlGaXMpA4pmIHdA'; // Your YouTube Channel ID (e.g., from youtube.com/account_advanced)
 
-    // Playlist ID for your curated "Latest Videos" (excluding shorts)
-    const LATEST_VIDEOS_PLAYLIST_ID = 'PLS15hKH3nTjlw51NsU8PFGcezq0jpoNUh'; 
+    // Playlist ID for your curated "Latest Videos" (if you want to override automatic fetching)
+    // IMPORTANT: This ID is NOT used if fetchLatestVideos is fetching directly from channel.
+    // It's kept here for context if you decide to revert to a playlist-based "Latest Videos" section.
+    const CURATED_LATEST_VIDEOS_PLAYLIST_ID = 'PLS15hKH3nTjlw51NsU8PFGcezq0jpoNUh'; 
 
-    // Optional: If you have a dedicated public playlist for your Shorts, enter its ID here.
-    // This variable is no longer used for fetching 'latest shorts' directly, but kept for context.
-    const SHORTS_PLAYLIST_ID = 'PLS15hKH3nTjkQGKa_MybUL8Wr4ykyHT35'; 
-
+    // --- DOM Elements ---
     const shortsContainer = document.getElementById('shorts-grid');
     const videosContainer = document.getElementById('videos-grid');
     const popularContainer = document.getElementById('popular-grid');
 
-    const maxResults = 6; // Number of videos/shorts to display in each grid
+    // --- General Settings ---
+    const maxResults = 6; // Number of videos/shorts to display in each grid section
+    const ITEMS_PER_API_CALL = 50; // Max results per page for YouTube API (for efficient filtering)
 
-    // Function to fetch the latest Shorts from the channel using search endpoint
-    // Now filters primarily by aspect ratio, without videoDuration=short API parameter
+    // --- Helper Functions ---
+
+    /**
+     * Creates and appends an iframe for a YouTube video to a given container.
+     * @param {HTMLElement} containerElement - The DOM element to append the iframe to.
+     * @param {string} videoId - The YouTube video ID.
+     * @param {string} videoTitle - The title of the video for accessibility.
+     */
+    function appendVideoIframe(containerElement, videoId, videoTitle) {
+        const iframe = document.createElement('iframe');
+        iframe.src = `https://www.youtube.com/embed/${videoId}`;
+        iframe.frameBorder = "0";
+        iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+        iframe.allowFullscreen = true;
+        iframe.setAttribute('title', videoTitle); // Essential for accessibility
+
+        containerElement.appendChild(iframe);
+    }
+
+    /**
+     * Handles common error display for API fetching.
+     * @param {HTMLElement} containerElement - The container to display the error in.
+     * @param {string} message - A user-friendly error message.
+     * @param {Error} error - The actual error object for console logging.
+     */
+    function handleError(containerElement, message, error) {
+        console.error(`Error fetching content: ${message}`, error);
+        containerElement.innerHTML = `<p class="loading-message error-message">${message}</p>`;
+    }
+
+    /**
+     * Helper to convert ISO 8601 duration string to total seconds.
+     * @param {string} iso8601Duration - The duration string (e.g., "PT1M30S").
+     * @returns {number} The total duration in seconds.
+     */
+    function parseDuration(iso8601Duration) {
+        const p = /P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)D)?T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/;
+        const matches = p.exec(iso8601Duration);
+        if (!matches) return 0;
+
+        const years = parseInt(matches[1] || 0, 10);
+        const months = parseInt(matches[2] || 0, 10);
+        const days = parseInt(matches[3] || 0, 10);
+        const hours = parseInt(matches[4] || 0, 10);
+        const minutes = parseInt(matches[5] || 0, 10);
+        const seconds = parseInt(matches[6] || 0, 10);
+
+        return years * 31536000 + months * 2592000 + days * 86400 + hours * 3600 + minutes * 60 + seconds;
+    }
+
+
+    // --- Core Fetching Functions ---
+
+    /**
+     * Fetches the latest YouTube Shorts from the channel.
+     * It uses the YouTube Data API's 'search' endpoint with 'videoDuration=short'
+     * and performs a client-side aspect ratio check for robustness.
+     * @param {HTMLElement} containerElement - The DOM element to display the shorts in.
+     */
     async function fetchLatestShorts(containerElement) {
-        let actualShorts = [];
+        let shortsFound = [];
         let nextPageToken = null;
-        const ITEMS_PER_SEARCH_CALL = 50; // Max results per page for YouTube Search API
-        const VERTICAL_ASPECT_RATIO_THRESHOLD = 0.9; // Aspect ratio for vertical videos (width/height < this)
+        // Aspect ratio threshold for vertical videos (width/height less than this)
+        // 0.8 allows a slightly wider vertical video, while 0.7 is more strict.
+        const VERTICAL_ASPECT_RATIO_THRESHOLD = 0.8; 
 
         try {
             containerElement.innerHTML = '<p class="loading-message">Loading latest Shorts...</p>';
 
             // Loop to fetch pages until we have enough shorts or no more pages
-            while (actualShorts.length < maxResults) {
-                // Fetch latest videos from the channel, ordered by date.
-                // Removed videoDuration=short filter from API call
-                let searchUrl = `https://www.googleapis.com/youtube/v3/search?part=id,snippet&channelId=${CHANNEL_ID}&type=video&order=date&key=${API_KEY}&maxResults=${ITEMS_PER_SEARCH_CALL}`;
+            while (shortsFound.length < maxResults) {
+                // Initial API call with videoDuration=short
+                let searchUrl = `https://www.googleapis.com/youtube/v3/search?part=id,snippet&channelId=${CHANNEL_ID}&type=video&order=date&videoDuration=short&key=${API_KEY}&maxResults=${ITEMS_PER_API_CALL}`;
                 if (nextPageToken) {
                     searchUrl += `&pageToken=${nextPageToken}`;
                 }
@@ -39,8 +100,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const searchData = await searchResponse.json();
 
                 if (!searchData.items || searchData.items.length === 0) {
-                    // No more videos to process or no content at all
-                    break;
+                    break; // No more videos or no content found
                 }
 
                 const videoIds = searchData.items.map(item => item.id.videoId).filter(id => id);
@@ -50,105 +110,129 @@ document.addEventListener('DOMContentLoaded', function() {
                     continue; // No valid video IDs, move to next page
                 }
 
-                // Fetch full video details for these video IDs to get thumbnail dimensions
+                // Fetch contentDetails (including thumbnail dimensions) for aspect ratio check
                 const detailsResponse = await fetch(
-                    `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoIds.join(',')}&key=${API_KEY}`
+                    `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id=${videoIds.join(',')}&key=${API_KEY}`
                 );
                 const detailsData = await detailsResponse.json();
 
                 if (detailsData.items) {
-                    // Filter by aspect ratio: only include videos with a significantly vertical orientation
+                    // Filter by aspect ratio to ensure only vertical videos are considered shorts
                     const filteredByAspectRatio = detailsData.items.filter(item => {
                         const width = item.snippet.thumbnails?.high?.width;
                         const height = item.snippet.thumbnails?.high?.height;
-
-                        if (width && height) {
-                             return (width / height) < VERTICAL_ASPECT_RATIO_THRESHOLD;
-                        }
-                        return false; // If no dimensions, filter it out
+                        return (width && height && (width / height) < VERTICAL_ASPECT_RATIO_THRESHOLD);
                     });
-                    actualShorts = actualShorts.concat(filteredByAspectRatio);
+                    shortsFound = shortsFound.concat(filteredByAspectRatio);
                 }
 
                 nextPageToken = searchData.nextPageToken;
                 if (!nextPageToken) {
-                    // No more pages to fetch
-                    break;
+                    break; // No more pages to fetch
                 }
             }
 
             containerElement.innerHTML = ''; // Clear loading message
 
-            if (actualShorts.length > 0) {
+            if (shortsFound.length > 0) {
                 // Sort by published date and take top 'maxResults'
-                actualShorts.sort((a, b) => new Date(b.snippet.publishedAt) - new Date(a.snippet.publishedAt));
+                shortsFound.sort((a, b) => new Date(b.snippet.publishedAt) - new Date(a.snippet.publishedAt));
 
-                actualShorts.slice(0, maxResults).forEach(item => {
-                    const videoId = item.id; // From videos endpoint, 'id' is just the video ID string
+                shortsFound.slice(0, maxResults).forEach(item => {
+                    const videoId = item.id; 
                     const videoTitle = item.snippet.title;
-
-                    const iframe = document.createElement('iframe');
-                    iframe.src = `https://www.youtube.com/embed/${videoId}`;
-                    iframe.frameBorder = "0";
-                    iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
-                    iframe.allowFullscreen = true;
-                    iframe.setAttribute('title', videoTitle);
-
-                    containerElement.appendChild(iframe);
+                    appendVideoIframe(containerElement, videoId, videoTitle);
                 });
             } else {
                 containerElement.innerHTML = '<p class="loading-message">No latest Shorts found that match criteria.</p>';
             }
         } catch (error) {
-            console.error('Error fetching latest Shorts:', error);
-            containerElement.innerHTML = '<p class="loading-message">Failed to load Shorts. Please check your API key and network connection, or API key restrictions.</p>';
+            handleError(containerElement, 'Failed to load latest Shorts. Please check your API key and network connection, or API key restrictions.', error);
         }
     }
 
-    // Function to fetch videos from a specific playlist (used for Latest Videos)
-    // No duration filtering is done here as it's playlist-based.
-    async function fetchVideosFromPlaylist(playlistId, containerElement) {
-        if (!playlistId) {
-            containerElement.innerHTML = '<p class="loading-message">Error: Playlist ID for videos is missing or invalid. Please check your setup.</p>';
-            return;
-        }
+    /**
+     * Fetches the latest long-form videos from the channel (excluding shorts).
+     * It fetches recent videos, then filters out shorts based on duration.
+     * @param {HTMLElement} containerElement - The DOM element to display the videos in.
+     */
+    async function fetchLatestVideos(containerElement) {
+        let longFormVideos = [];
+        let nextPageToken = null;
+        // Videos with duration <= this threshold will be considered shorts and filtered out.
+        // Using 65 seconds to be safe (just over 1 minute).
+        const SHORTS_MAX_DURATION_SECONDS = 65; 
 
         try {
             containerElement.innerHTML = '<p class="loading-message">Loading latest videos...</p>';
 
-            const response = await fetch(
-                `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${playlistId}&key=${API_KEY}&maxResults=${maxResults}`
-            );
-            const data = await response.json();
+            // Loop to fetch pages until we have enough long-form videos or no more pages
+            while (longFormVideos.length < maxResults) {
+                // Fetch latest videos from the channel, ordered by date.
+                let searchUrl = `https://www.googleapis.com/youtube/v3/search?part=id,snippet&channelId=${CHANNEL_ID}&type=video&order=date&key=${API_KEY}&maxResults=${ITEMS_PER_API_CALL}`;
+                if (nextPageToken) {
+                    searchUrl += `&pageToken=${nextPageToken}`;
+                }
+
+                const searchResponse = await fetch(searchUrl);
+                const searchData = await searchResponse.json();
+
+                if (!searchData.items || searchData.items.length === 0) {
+                    break; // No more videos or no content found
+                }
+
+                const videoIds = searchData.items.map(item => item.id.videoId).filter(id => id);
+
+                if (videoIds.length === 0) {
+                    nextPageToken = searchData.nextPageToken;
+                    continue; // No valid video IDs, move to next page
+                }
+
+                // Fetch contentDetails (including duration) for these video IDs
+                const detailsResponse = await fetch(
+                    `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id=${videoIds.join(',')}&key=${API_KEY}`
+                );
+                const detailsData = await detailsResponse.json();
+
+                if (detailsData.items) {
+                    // Filter out videos considered shorts based on duration
+                    const filteredByDuration = detailsData.items.filter(item => {
+                        const durationInSeconds = parseDuration(item.contentDetails.duration);
+                        return durationInSeconds > SHORTS_MAX_DURATION_SECONDS;
+                    });
+                    longFormVideos = longFormVideos.concat(filteredByDuration);
+                }
+
+                nextPageToken = searchData.nextPageToken;
+                if (!nextPageToken) {
+                    break; // No more pages to fetch
+                }
+            }
 
             containerElement.innerHTML = ''; // Clear loading message
 
-            if (data.items && data.items.length > 0) {
-                data.items.forEach(item => {
-                    const videoId = item.snippet.resourceId.videoId;
+            if (longFormVideos.length > 0) {
+                // Sort by published date and take top 'maxResults'
+                longFormVideos.sort((a, b) => new Date(b.snippet.publishedAt) - new Date(a.snippet.publishedAt));
+
+                longFormVideos.slice(0, maxResults).forEach(item => {
+                    const videoId = item.id; 
                     const videoTitle = item.snippet.title;
-
-                    const iframe = document.createElement('iframe');
-                    iframe.src = `https://www.youtube.com/embed/${videoId}`;
-                    iframe.frameBorder = "0";
-                    iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
-                    iframe.allowFullscreen = true;
-                    iframe.setAttribute('title', videoTitle);
-
-                    containerElement.appendChild(iframe);
+                    appendVideoIframe(containerElement, videoId, videoTitle);
                 });
             } else {
-                containerElement.innerHTML = '<p class="loading-message">No content found in this playlist.</p>';
+                containerElement.innerHTML = '<p class="loading-message">No latest long-form videos found.</p>';
             }
         } catch (error) {
-            console.error('Error fetching videos from playlist:', error);
-            containerElement.innerHTML = '<p class="loading-message">Failed to load videos. Please check your API key and network connection, or API key restrictions.</p>';
+            handleError(containerElement, 'Failed to load latest videos. Please check your API key and network connection, or API key restrictions.', error);
         }
     }
 
-
-    // Function to fetch popular videos using the search endpoint
-    // No duration filtering is done here as it's sorted by viewCount.
+    /**
+     * Fetches the most popular videos from the channel.
+     * This uses the YouTube Data API's 'search' endpoint ordered by viewCount.
+     * @param {HTMLElement} containerElement - The DOM element to display the popular videos in.
+     */
     async function fetchPopularVideos(containerElement) {
         try {
             containerElement.innerHTML = '<p class="loading-message">Loading most popular videos...</p>';
@@ -162,7 +246,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (data.items && data.items.length > 0) {
                 data.items.forEach(item => {
-                    const videoId = item.id.videoId;
+                    const videoId = item.id.videoId; 
                     const videoTitle = item.snippet.title;
                     const thumbnailUrl = item.snippet.thumbnails.high.url;
 
@@ -191,19 +275,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 containerElement.innerHTML = '<p class="loading-message">No popular videos found.</p>';
             }
         } catch (error) {
-            console.error('Error fetching popular videos:', error);
-            containerElement.innerHTML = '<p class="loading-message">Failed to load popular videos. Please check your API key and network connection, or API key restrictions.</p>';
+            handleError(containerElement, 'Failed to load popular videos. Please check your API key and network connection, or API key restrictions.', error);
         }
     }
 
     // --- Initial Execution on Page Load ---
 
-    // For Latest Shorts
+    // Fetch and display the latest Shorts
     fetchLatestShorts(shortsContainer);
 
-    // For Latest Videos (now uses the specific playlist you provided)
-    fetchVideosFromPlaylist(LATEST_VIDEOS_PLAYLIST_ID, videosContainer);
+    // Fetch and display the latest long-form videos
+    fetchLatestVideos(videosContainer);
 
-    // For Most Popular videos
+    // Fetch and display the most popular videos
     fetchPopularVideos(popularContainer);
 });

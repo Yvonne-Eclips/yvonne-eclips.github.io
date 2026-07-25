@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Yvonne Eclips - VTuber & Content Creator</title>
     
-    <!-- Fonts & Icons -->
+    <!-- Google Fonts & Font Awesome Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <link rel="stylesheet" href="style.css">
 </head>
@@ -17,57 +17,59 @@
 
     <!-- Sidebar Navigation -->
     <aside id="app-sidebar">
-        <div class="sidebar-brand">
-            <img src="https://pbs.twimg.com/profile_images/1833068419056631808/vDrOPui4_400x400.jpg" alt="Yvonne Eclips Logo" class="brand-avatar">
-            <div class="brand-details">
-                <h1>YVONNE ECLIPS</h1>
-                <span class="vibe-tag">VTUBER / CLIPPER / EDITOR</span>
+        <div class="sidebar-top">
+            <div class="sidebar-brand">
+                <img src="https://pbs.twimg.com/profile_images/1833068419056631808/vDrOPui4_400x400.jpg" alt="Yvonne Eclips" class="brand-avatar">
+                <div class="brand-details">
+                    <h1>YVONNE ECLIPS</h1>
+                    <span class="vibe-tag">VTUBER / CLIPPER / EDITOR</span>
+                </div>
             </div>
+
+            <nav class="nav-tabs">
+                <button class="tab-btn active" data-target="page-hub">
+                    <i class="fa-solid fa-house"></i> Hub & Featured
+                </button>
+                <button class="tab-btn" data-target="page-commissions">
+                    <i class="fa-solid fa-briefcase"></i> Commissions
+                    <span class="badge open">OPEN</span>
+                </button>
+                <button class="tab-btn" data-target="page-portfolio">
+                    <i class="fa-solid fa-play"></i> Portfolio
+                </button>
+                <button class="tab-btn" data-target="page-connect">
+                    <i class="fa-solid fa-share-nodes"></i> Links & Socials
+                </button>
+            </nav>
         </div>
 
-        <nav class="nav-tabs">
-            <button class="tab-btn active" data-target="page-hub">
-                <i class="fas fa-border-all"></i> Hub & Featured
-            </button>
-            <button class="tab-btn" data-target="page-commissions">
-                <i class="fas fa-briefcase"></i> Commissions
-                <span class="badge open">OPEN</span>
-            </button>
-            <button class="tab-btn" data-target="page-portfolio">
-                <i class="fas fa-play-circle"></i> Portfolio
-            </button>
-            <button class="tab-btn" data-target="page-connect">
-                <i class="fas fa-link"></i> Links & Socials
-            </button>
-        </nav>
-
-        <div class="sidebar-credits">
-            <p><strong>3.5K+ SUBSCRIBERS</strong></p>
+        <div class="sidebar-credits glass">
+            <p class="sub-count"><i class="fa-brands fa-youtube"></i> <strong>3.5K+ SUBSCRIBERS</strong></p>
             <p class="sub-text">Highlighting the Best Indie VTuber Moments</p>
         </div>
     </aside>
 
-    <!-- Main Content Area -->
+    <!-- Main Viewport Area -->
     <main id="app-viewport">
 
-        <!-- Top Announcement / Affiliate Banner -->
-        <header class="top-announcement">
+        <!-- Top Announcement Header -->
+        <header class="top-announcement glass">
             <div class="promo-item">
-                <i class="fas fa-bolt glow-icon"></i>
-                <span>Need custom edits or stream highlights? Check out my commission packages!</span>
+                <i class="fa-solid fa-bolt glow-icon"></i>
+                <span>Need custom edits or stream highlights? Commission slots are open!</span>
             </div>
             <a href="https://www.buymeacoffee.com/YfanTheNial" target="_blank" class="monster-btn">
-                <i class="fas fa-coffee"></i> Buy Me a Monster Energy
+                <i class="fa-solid fa-mug-hot"></i> Buy Me a Monster Energy
             </a>
         </header>
 
-        <!-- PAGE 0: HUB / FEATURED -->
+        <!-- PAGE 1: HUB / FEATURED -->
         <section id="page-hub" class="portal-page active">
             <div class="hero-card glass">
                 <div class="hero-content">
                     <span class="tag">FEATURED CREATOR HIGHLIGHT</span>
                     <h2>VTuber Highlight & Clip Editing Portal</h2>
-                    <p>Creating high-energy, engaging edits, funny clips, and thumbnail graphics for indie VTubers and content creators.</p>
+                    <p>Creating high-energy, engaging edits, funny clips, and eye-catching thumbnails for indie VTubers and content creators.</p>
                     <div class="hero-actions">
                         <button class="btn-primary" onclick="switchPage('page-commissions')">Request Commission</button>
                         <a href="https://www.youtube.com/@Yvonne_Eclips" target="_blank" class="btn-secondary">Visit Channel</a>
@@ -75,7 +77,7 @@
                 </div>
             </div>
 
-            <!-- Stats Bar -->
+            <!-- Stats Overview -->
             <div class="stats-grid">
                 <div class="stat-card glass">
                     <h3>500+</h3>
@@ -86,48 +88,50 @@
                     <p>YouTube Subs</p>
                 </div>
                 <div class="stat-card glass">
-                    <h3>600K+</h3>
+                    <h3>620K+</h3>
                     <p>Total Views</p>
                 </div>
             </div>
         </section>
 
-        <!-- PAGE 1: COMMISSIONS -->
+        <!-- PAGE 2: COMMISSIONS -->
         <section id="page-commissions" class="portal-page">
             <div class="section-title">
                 <h2>COMMISSION SERVICES</h2>
-                <span class="status-pill open"><i class="fas fa-circle"></i> Status: Open</span>
+                <span class="status-pill open"><i class="fa-solid fa-circle"></i> Status: Open</span>
             </div>
 
             <div class="services-grid">
                 <div class="service-card glass">
-                    <div class="icon-header"><i class="fas fa-film"></i></div>
+                    <div class="icon-header"><i class="fa-solid fa-film"></i></div>
                     <h3>VTuber Clip Editing</h3>
-                    <p>Short-form vertical clips for TikTok, YouTube Shorts, and Reels featuring smooth pans, captions, and sound effects.</p>
+                    <p>Short-form vertical clips for TikTok, YouTube Shorts, and Reels featuring smooth pans, custom subtitles, sound effects, and clean pacing.</p>
                 </div>
                 <div class="service-card glass">
-                    <div class="icon-header"><i class="fas fa-video"></i></div>
+                    <div class="icon-header"><i class="fa-solid fa-photo-film"></i></div>
                     <h3>Full Video Editing</h3>
-                    <p>Paced stream highlights, letsplays, or vlog edits with customized pacing, meme edits, and audio balancing.</p>
+                    <p>Paced stream highlights, letsplays, or collab edits with customized audio balancing, meme edits, and high retention cuts.</p>
                 </div>
                 <div class="service-card glass">
-                    <div class="icon-header"><i class="fas fa-image"></i></div>
-                    <h3>Thumbnail Design</h3>
-                    <p>Eye-catching, high-click-through thumbnails customized for your branding and video topic.</p>
+                    <div class="icon-header"><i class="fa-solid fa-image"></i></div>
+                    <h3>Thumbnail & Graphic Design</h3>
+                    <p>Eye-catching, high CTR thumbnails designed specifically around VTuber aesthetics and stream branding.</p>
                 </div>
             </div>
 
             <div class="commission-callout glass">
-                <h3>Ready to order?</h3>
-                <p>Submit your inquiry directly through Buy Me a Coffee or reach out on Twitter / Discord.</p>
-                <a href="https://studio.buymeacoffee.com/commissions" target="_blank" class="btn-primary">Order via BuyMeACoffee</a>
+                <div>
+                    <h3>Ready to collaborate?</h3>
+                    <p>Submit your project inquiry directly through Buy Me a Coffee or DM me on Twitter/Discord!</p>
+                </div>
+                <a href="https://www.buymeacoffee.com/YfanTheNial" target="_blank" class="btn-primary">Order via Buy Me a Coffee</a>
             </div>
         </section>
 
-        <!-- PAGE 2: PORTFOLIO -->
+        <!-- PAGE 3: PORTFOLIO -->
         <section id="page-portfolio" class="portal-page">
             <div class="section-title">
-                <h2>PORTFOLIO & WORK</h2>
+                <h2>FEATURED PORTFOLIO</h2>
             </div>
 
             <div class="video-grid">
@@ -135,33 +139,41 @@
                     <div class="responsive-video">
                         <iframe src="https://www.youtube.com/embed/videoseries?list=UUDwGOo8zxlGaXMpA4pmIHdA" title="Latest Uploads" allowfullscreen></iframe>
                     </div>
-                    <h4>Latest Uploads</h4>
+                    <h4>Latest VTuber Highlights & Uploads</h4>
                 </div>
             </div>
         </section>
 
-        <!-- PAGE 3: CONNECT / SOCIALS -->
+        <!-- PAGE 4: CONNECT / SOCIALS -->
         <section id="page-connect" class="portal-page">
             <div class="section-title">
                 <h2>CONNECT WITH ME</h2>
             </div>
 
             <div class="social-grid">
-                <a href="https://www.youtube.com/channel/UCDwGOo8zxlGaXMpA4pmIHdA" target="_blank" class="social-tile yt">
-                    <i class="fab fa-youtube"></i>
+                <a href="https://www.youtube.com/@Yvonne_Eclips" target="_blank" class="social-tile yt">
+                    <i class="fa-brands fa-youtube"></i>
                     <span>YouTube</span>
                 </a>
                 <a href="https://x.com/YfanTheNial" target="_blank" class="social-tile tw">
-                    <i class="fab fa-twitter"></i>
+                    <i class="fa-brands fa-x-twitter"></i>
                     <span>Twitter / X</span>
                 </a>
                 <a href="https://www.twitch.tv/yvonne_eclips" target="_blank" class="social-tile twitch">
-                    <i class="fab fa-twitch"></i>
+                    <i class="fa-brands fa-twitch"></i>
                     <span>Twitch</span>
                 </a>
                 <a href="https://discord.gg/d82MdUC8P5" target="_blank" class="social-tile discord">
-                    <i class="fab fa-discord"></i>
-                    <span>Discord Server</span>
+                    <i class="fa-brands fa-discord"></i>
+                    <span>Discord Community</span>
+                </a>
+                <a href="https://www.instagram.com/yvonneeclips/" target="_blank" class="social-tile insta">
+                    <i class="fa-brands fa-instagram"></i>
+                    <span>Instagram</span>
+                </a>
+                <a href="https://www.buymeacoffee.com/YfanTheNial" target="_blank" class="social-tile bmac">
+                    <i class="fa-solid fa-mug-hot"></i>
+                    <span>Buy Me a Coffee</span>
                 </a>
             </div>
         </section>

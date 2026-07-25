@@ -493,7 +493,7 @@ body.dashboard-body {
     color: var(--text-sub);
 }
 
-/* Redesigned Commissions Page & Pricing Banner */
+/* Commissions Page & Pricing Banner */
 .section-title {
     display: flex;
     justify-content: space-between;

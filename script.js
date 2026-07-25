@@ -1,39 +1,30 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const sidebar = document.getElementById('sidebar');
-    const menuToggle = document.querySelector('.menu-toggle');
-    const closeSidebar = document.querySelector('.close-sidebar');
-    const navLinks = document.querySelectorAll('#sidebar nav ul li a');
-    const body = document.body;
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const pages = document.querySelectorAll('.portal-page');
 
-    function openNav() {
-        sidebar.classList.add('open');
-        body.classList.add('sidebar-open');
+    function switchPage(pageId) {
+        // Remove active class from all tabs and pages
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+        pages.forEach(page => page.classList.remove('active'));
+
+        // Target matching tab and page
+        const targetBtn = document.querySelector(`[data-target="${pageId}"]`);
+        const targetPage = document.getElementById(pageId);
+
+        if (targetBtn && targetPage) {
+            targetBtn.classList.add('active');
+            targetPage.classList.add('active');
+        }
     }
 
-    function closeNav() {
-        sidebar.classList.remove('open');
-        body.classList.remove('sidebar-open');
-    }
-
-    if (menuToggle) {
-        menuToggle.addEventListener('click', openNav);
-    }
-
-    if (closeSidebar) {
-        closeSidebar.addEventListener('click', closeNav);
-    }
-
-    navLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            closeNav();
+    // Add click event listeners to tabs
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const pageId = button.getAttribute('data-target');
+            switchPage(pageId);
         });
     });
 
-    document.addEventListener('click', (event) => {
-        if (sidebar.classList.contains('open')) {
-            if (!sidebar.contains(event.target) && !menuToggle.contains(event.target) && event.target !== menuToggle) {
-                closeNav();
-            }
-        }
-    });
+    // Make switchPage globally accessible for embedded links/buttons
+    window.switchPage = switchPage;
 });

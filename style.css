@@ -215,7 +215,9 @@ body.dashboard-body {
     margin-left: var(--sidebar-width);
     flex: 1;
     padding: 30px;
-    max-width: 1200px;
+    width: calc(100% - var(--sidebar-width)); /* Fills remaining screen width */
+    max-width: 100%; /* Removes the 1200px cap */
+}
 }
 
 .top-announcement {

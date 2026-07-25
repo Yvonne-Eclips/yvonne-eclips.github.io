@@ -857,3 +857,97 @@ body.dashboard-body {
         justify-content: center;
     }
 }
+/* ==========================================
+   MOBILE & TABLET RESPONSIVE FIXES
+   ========================================== */
+@media (max-width: 768px) {
+    /* Stack layout vertically */
+    body.dashboard-body {
+        flex-direction: column;
+    }
+
+    /* Convert Sidebar into Top Bar */
+    #app-sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        padding: 15px 20px;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .sidebar-brand {
+        margin-bottom: 15px;
+    }
+
+    /* Horizontal scrolling for navigation tabs on mobile */
+    .nav-tabs {
+        flex-direction: row;
+        overflow-x: auto;
+        padding-bottom: 8px;
+        gap: 6px;
+    }
+
+    .tab-btn {
+        white-space: nowrap;
+        padding: 8px 12px;
+        font-size: 0.85rem;
+    }
+
+    /* Hide heavy sidebar widgets on small screens to save space */
+    .twitch-status-card, .sidebar-credits {
+        display: none;
+    }
+
+    /* Reset Main Viewport Offset */
+    #app-viewport {
+        margin-left: 0 !important;
+        width: 100% !important;
+        padding: 15px;
+    }
+
+    /* Top Announcement Bar Responsive */
+    .top-announcement {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 14px;
+    }
+
+    .promo-item {
+        white-space: normal; /* Allow text to wrap cleanly */
+        font-size: 0.85rem;
+    }
+
+    .top-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    /* Stack All Grids into 1 Column */
+    .stats-grid,
+    .services-grid,
+    .social-grid {
+        grid-template-columns: 1fr !important;
+        gap: 15px;
+    }
+
+    /* Hero & Titles Adjustments */
+    .hero-card {
+        padding: 20px;
+    }
+
+    .hero-content h2 {
+        font-size: 1.5rem;
+    }
+
+    .hero-actions {
+        flex-direction: column;
+    }
+
+    .hero-actions button,
+    .hero-actions a {
+        width: 100%;
+        justify-content: center;
+    }
+}

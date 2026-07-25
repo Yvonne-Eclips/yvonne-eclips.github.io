@@ -58,40 +58,74 @@
                 <i class="fa-solid fa-bolt glow-icon"></i>
                 <span>Need custom edits or stream highlights? Commission slots are open!</span>
             </div>
-            <a href="https://studio.buymeacoffee.com/dashboard" target="_blank" class="monster-btn">
-                <i class="fa-solid fa-mug-hot"></i> Buy Me a Monster Energy
-            </a>
+            <div class="top-actions">
+                <a href="https://ytjobs.co/" target="_blank" class="ytjobs-pill">
+                    <i class="fa-solid fa-circle-check"></i> YT Jobs Verified
+                </a>
+                <a href="https://www.buymeacoffee.com/YfanTheNial" target="_blank" class="monster-btn">
+                    <i class="fa-solid fa-mug-hot"></i> Buy Me a Monster
+                </a>
+            </div>
         </header>
 
         <!-- PAGE 1: HUB / FEATURED -->
         <section id="page-hub" class="portal-page active">
+            
+            <!-- Hero Showcase Banner -->
             <div class="hero-card glass">
                 <div class="hero-content">
-                    <span class="tag">FEATURED CREATOR HIGHLIGHT</span>
-                    <h2>VTuber Highlight & Clip Editing Portal</h2>
-                    <p>Creating high-energy, engaging edits, funny clips, and eye-catching thumbnails for indie VTubers and content creators.</p>
+                    <span class="tag"><i class="fa-solid fa-fire"></i> CREATOR & EDITING PORTAL</span>
+                    <h2>High-Energy VTuber Edits & Highlights</h2>
+                    <p>Paced stream highlights, meme edits, short-form clips, and eye-catching thumbnails designed for indie VTubers and content creators.</p>
                     <div class="hero-actions">
-                        <button class="btn-primary" onclick="switchPage('page-commissions')">Request Commission</button>
-                        <a href="https://www.youtube.com/@Yvonne_Eclips" target="_blank" class="btn-secondary">Visit Channel</a>
+                        <button class="btn-primary" onclick="switchPage('page-commissions')"><i class="fa-solid fa-paper-plane"></i> Request Commission</button>
+                        <a href="https://ytjobs.co/" target="_blank" class="btn-ytjobs"><i class="fa-solid fa-briefcase"></i> Hire on YT Jobs</a>
                     </div>
                 </div>
             </div>
 
-            <!-- Stats Overview -->
+            <!-- Stats Bar -->
             <div class="stats-grid">
                 <div class="stat-card glass">
                     <h3>500+</h3>
-                    <p>Videos Created</p>
+                    <p>Videos & Clips Created</p>
                 </div>
                 <div class="stat-card glass">
                     <h3>3.5K+</h3>
-                    <p>YouTube Subs</p>
+                    <p>YouTube Subscribers</p>
                 </div>
                 <div class="stat-card glass">
                     <h3>620K+</h3>
-                    <p>Total Views</p>
+                    <p>Total Channel Views</p>
                 </div>
             </div>
+
+            <!-- FRONT PAGE CONTENT SHOWCASE -->
+            <div class="front-showcase-section">
+                <div class="showcase-header">
+                    <h3><i class="fa-brands fa-youtube glow-icon-red"></i> FRONT PAGE SHOWCASE</h3>
+                    <div class="content-filter-buttons">
+                        <button class="filter-btn active" data-filter="latest">Latest</button>
+                        <button class="filter-btn" data-filter="popular">Most Viewed</button>
+                        <button class="filter-btn" data-filter="shorts">Shorts & Clips</button>
+                    </div>
+                </div>
+
+                <!-- Video Showcase Grid -->
+                <div class="showcase-grid" id="showcase-grid">
+                    <!-- Default Featured Video Frame -->
+                    <div class="showcase-card glass">
+                        <div class="responsive-video">
+                            <iframe src="https://www.youtube.com/embed/videoseries?list=UUDwGOo8zxlGaXMpA4pmIHdA" title="Latest Uploads" allowfullscreen></iframe>
+                        </div>
+                        <div class="card-info">
+                            <h4>Latest Channel Uploads & Highlights</h4>
+                            <p class="meta-text"><i class="fa-solid fa-rotate"></i> Automatically synced with YouTube</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </section>
 
         <!-- PAGE 2: COMMISSIONS -->
@@ -119,12 +153,24 @@
                 </div>
             </div>
 
+            <!-- YT Jobs Special Hire Box -->
+            <div class="ytjobs-banner glass">
+                <div class="ytjobs-info">
+                    <i class="fa-solid fa-id-badge ytjobs-icon"></i>
+                    <div>
+                        <h3>Prefer to hire via YT Jobs?</h3>
+                        <p>Check out my verified portfolio, client reviews, and direct contract options on YT Jobs.</p>
+                    </div>
+                </div>
+                <a href="https://ytjobs.co/" target="_blank" class="btn-ytjobs-gold">View YT Jobs Profile</a>
+            </div>
+
             <div class="commission-callout glass">
                 <div>
                     <h3>Ready to collaborate?</h3>
                     <p>Submit your project inquiry directly through Buy Me a Coffee or DM me on Twitter/Discord!</p>
                 </div>
-                <a href="https://studio.buymeacoffee.com/dashboard" target="_blank" class="btn-primary">Order via Buy Me a Coffee</a>
+                <a href="https://www.buymeacoffee.com/YfanTheNial" target="_blank" class="btn-primary">Order via Buy Me a Coffee</a>
             </div>
         </section>
 
@@ -137,9 +183,9 @@
             <div class="video-grid">
                 <div class="video-card glass">
                     <div class="responsive-video">
-                        <iframe src="https://www.youtube.com/embed/2syrU4IFuUM" title="Latest Uploads" allowfullscreen></iframe>
+                        <iframe src="https://www.youtube.com/embed/videoseries?list=UUDwGOo8zxlGaXMpA4pmIHdA" title="Latest Uploads" allowfullscreen></iframe>
                     </div>
-                    <h4>Latest VTuber Highlights & Uploads</h4>
+                    <h4>All Channel Highlights & Edits</h4>
                 </div>
             </div>
         </section>
@@ -147,11 +193,15 @@
         <!-- PAGE 4: CONNECT / SOCIALS -->
         <section id="page-connect" class="portal-page">
             <div class="section-title">
-                <h2>CONNECT WITH ME</h2>
+                <h2>CONNECT & HIRE ME</h2>
             </div>
 
             <div class="social-grid">
-                <a href="https://www.youtube.com/@Yvonne_Eclips" target="_blank" class="social-tile yt">
+                <a href="https://ytjobs.co/" target="_blank" class="social-tile ytjobs">
+                    <i class="fa-solid fa-briefcase"></i>
+                    <span>YT Jobs Profile</span>
+                </a>
+                <a href="https://youtube.com/@Yvonne_Eclips" target="_blank" class="social-tile yt">
                     <i class="fa-brands fa-youtube"></i>
                     <span>YouTube</span>
                 </a>
@@ -162,6 +212,18 @@
                 <a href="https://www.twitch.tv/yvonne_eclips" target="_blank" class="social-tile twitch">
                     <i class="fa-brands fa-twitch"></i>
                     <span>Twitch</span>
+                </a>
+                <a href="https://discord.gg/d82MdUC8P5" target="_blank" class="social-tile discord">
+                    <i class="fa-brands fa-discord"></i>
+                    <span>Discord Community</span>
+                </a>
+                <a href="https://www.instagram.com/yvonneeclips/" target="_blank" class="social-tile insta">
+                    <i class="fa-brands fa-instagram"></i>
+                    <span>Instagram</span>
+                </a>
+                <a href="https://www.buymeacoffee.com/YfanTheNial" target="_blank" class="social-tile bmac">
+                    <i class="fa-solid fa-mug-hot"></i>
+                    <span>Buy Me a Coffee</span>
                 </a>
             </div>
         </section>

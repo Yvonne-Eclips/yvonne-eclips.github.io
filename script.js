@@ -33,11 +33,11 @@ document.addEventListener('DOMContentLoaded', () => {
         latest: `
             <div class="showcase-card glass">
                 <div class="responsive-video">
-                    <iframe src="https://www.youtube.com/embed/N_8wkC-bwuk" title="Latest Upload" allowfullscreen></iframe>
+                    <iframe src="https://www.youtube.com/embed/videoseries?list=PLS15hKH3nTjlw51NsU8PFGcezq0jpoNUh" title="Latest Uploads Playlist" allowfullscreen></iframe>
                 </div>
                 <div class="card-info">
-                    <h4>Latest VTuber Stream Highlight</h4>
-                    <p class="meta-text"><i class="fa-solid fa-sparkles"></i> High-retention stream edit</p>
+                    <h4>Latest VTuber Clips & Stream Edits</h4>
+                    <p class="meta-text"><i class="fa-solid fa-sparkles"></i> Auto-updated latest uploads playlist</p>
                 </div>
             </div>
         `,

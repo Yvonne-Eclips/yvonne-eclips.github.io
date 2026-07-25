@@ -60,7 +60,7 @@ body.dashboard-body {
     display: flex;
     align-items: center;
     gap: 15px;
-    margin-bottom: 35px;
+    margin-bottom: 25px;
 }
 
 .brand-avatar, .sidebar-brand img {
@@ -93,14 +93,14 @@ body.dashboard-body {
 .nav-tabs {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
 }
 
 .tab-btn {
     background: transparent;
     border: none;
     color: var(--text-sub);
-    padding: 14px 18px;
+    padding: 12px 16px;
     border-radius: 12px;
     text-align: left;
     font-size: 0.95rem;
@@ -137,6 +137,57 @@ body.dashboard-body {
     padding: 3px 8px;
     border-radius: 20px;
     font-weight: 700;
+}
+
+/* Twitch Live Indicator */
+.twitch-status-card {
+    padding: 14px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.status-indicator.offline .pulse-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #757575;
+}
+
+.status-indicator.live .pulse-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #ff0000;
+    box-shadow: 0 0 10px #ff0000;
+}
+
+.status-sub {
+    font-size: 0.72rem;
+    color: var(--text-sub);
+    margin-bottom: 8px;
+}
+
+.twitch-link {
+    color: #9146ff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.twitch-link:hover {
+    text-decoration: underline;
 }
 
 .sidebar-credits {
@@ -243,7 +294,7 @@ body.dashboard-body {
 /* Hero Section */
 .hero-card {
     padding: 35px;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     background: linear-gradient(135deg, rgba(233, 30, 99, 0.12) 0%, rgba(156, 39, 176, 0.08) 100%);
 }
 
@@ -311,6 +362,38 @@ body.dashboard-body {
 .btn-ytjobs:hover {
     background: var(--accent-gold);
     color: #000;
+}
+
+/* Tools Bar */
+.tools-bar {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 14px 22px;
+    margin-bottom: 25px;
+}
+
+.tools-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--accent-pink);
+}
+
+.tools-list {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.tool-chip {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #fff;
 }
 
 /* Stats Section */
@@ -410,7 +493,7 @@ body.dashboard-body {
     color: var(--text-sub);
 }
 
-/* Redesigned Commissions Page */
+/* Redesigned Commissions Page & Pricing Banner */
 .section-title {
     display: flex;
     justify-content: space-between;
@@ -433,6 +516,44 @@ body.dashboard-body {
     font-weight: 700;
 }
 
+.pricing-banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 30px;
+    margin-bottom: 25px;
+    border: 1px solid rgba(233, 30, 99, 0.3);
+    background: linear-gradient(135deg, rgba(233, 30, 99, 0.1) 0%, rgba(20, 20, 26, 0.8) 100%);
+}
+
+.price-highlight {
+    display: flex;
+    flex-direction: column;
+}
+
+.price-tag {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--accent-pink);
+}
+
+.price-tag small {
+    font-size: 1rem;
+    color: var(--text-sub);
+}
+
+.price-desc {
+    font-size: 0.8rem;
+    color: var(--text-sub);
+}
+
+.pricing-details p {
+    font-size: 0.88rem;
+    color: var(--text-main);
+    margin-bottom: 6px;
+}
+
 .services-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -444,7 +565,7 @@ body.dashboard-body {
     padding: 28px 24px;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: space-between;
     transition: all 0.3s ease;
     border: 1px solid rgba(255, 255, 255, 0.08);
 }
@@ -496,6 +617,19 @@ body.dashboard-body {
     color: var(--text-sub);
     font-size: 0.9rem;
     line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.service-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 15px;
+}
+
+.service-price {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    color: var(--accent-pink);
+    font-size: 1.1rem;
 }
 
 .ytjobs-banner {
@@ -593,6 +727,71 @@ body.dashboard-body {
     transform: translateY(-2px);
 }
 
+/* Reviews Page */
+.reviews-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+}
+
+.review-card {
+    padding: 28px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.reviewer-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.avatar-placeholder {
+    font-size: 2.2rem;
+    color: var(--accent-pink);
+}
+
+.reviewer-info h4 {
+    font-size: 1.1rem;
+}
+
+.reviewer-tag {
+    font-size: 0.78rem;
+    color: var(--text-sub);
+}
+
+.star-rating {
+    color: var(--accent-gold);
+    font-size: 0.95rem;
+    display: flex;
+    gap: 4px;
+}
+
+.review-text {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--text-main);
+    font-style: italic;
+    margin-bottom: 18px;
+}
+
+.review-verify-link {
+    color: var(--accent-gold);
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.review-verify-link:hover {
+    text-decoration: underline;
+}
+
 /* Social Grid Section */
 .social-grid {
     display: grid;
@@ -639,7 +838,7 @@ body.dashboard-body {
     .stats-grid {
         grid-template-columns: 1fr;
     }
-    .ytjobs-banner, .commission-callout {
+    .pricing-banner, .ytjobs-banner, .commission-callout {
         flex-direction: column;
         align-items: flex-start;
         gap: 15px;

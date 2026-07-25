@@ -226,6 +226,8 @@ body.dashboard-body {
     align-items: center;
     padding: 14px 22px;
     margin-bottom: 30px;
+    gap: 15px; /* Adds breathing room between text and buttons */
+    flex-wrap: wrap; /* Keeps elements from squishing or overlapping on smaller screens */
 }
 
 .top-actions {

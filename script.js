@@ -33,33 +33,33 @@ document.addEventListener('DOMContentLoaded', () => {
         latest: `
             <div class="showcase-card glass">
                 <div class="responsive-video">
-                    <iframe src="https://www.youtube.com/embed/videoseries?list=UUDwGOo8zxlGaXMpA4pmIHdA" title="Latest Uploads" allowfullscreen></iframe>
+                    <iframe src="https://www.youtube.com/embed/N_8wkC-bwuk" title="Latest Upload" allowfullscreen></iframe>
                 </div>
                 <div class="card-info">
-                    <h4>Latest VTuber Highlights & Stream Edits</h4>
-                    <p class="meta-text"><i class="fa-solid fa-rotate"></i> Auto-updated channel uploads feed</p>
+                    <h4>Latest VTuber Stream Highlight</h4>
+                    <p class="meta-text"><i class="fa-solid fa-sparkles"></i> High-retention stream edit</p>
                 </div>
             </div>
         `,
         popular: `
             <div class="showcase-card glass">
                 <div class="responsive-video">
-                    <iframe src="https://www.youtube.com/embed/2syrU4IFuUM" title="Most Viewed Highlight" allowfullscreen></iframe>
+                    <iframe src="https://www.youtube.com/embed/videoseries?list=PLS15hKH3nTjlOCzZCasgSd11TR-zRcU_2" title="Most Viewed Playlist" allowfullscreen></iframe>
                 </div>
                 <div class="card-info">
-                    <h4>Top Viral Edit: Chat Reacts to 'CaseOh'</h4>
-                    <p class="meta-text"><i class="fa-solid fa-fire glow-icon-red"></i> Highest Engagement Highlight</p>
+                    <h4>Most Viewed Highlights & Viral Edits</h4>
+                    <p class="meta-text"><i class="fa-solid fa-fire glow-icon-red"></i> Top Performing VTuber Clips Playlist</p>
                 </div>
             </div>
         `,
         shorts: `
             <div class="showcase-card glass">
                 <div class="responsive-video">
-                    <iframe src="https://www.youtube.com/embed/videoseries?list=UUDwGOo8zxlGaXMpA4pmIHdA" title="VTuber Shorts" allowfullscreen></iframe>
+                    <iframe src="https://www.youtube.com/embed/videoseries?list=PLS15hKH3nTjkQGKa_MybUL8Wr4ykyHT35" title="VTuber Shorts Playlist" allowfullscreen></iframe>
                 </div>
                 <div class="card-info">
-                    <h4>Vertical TikToks, Reels & VTuber Shorts</h4>
-                    <p class="meta-text"><i class="fa-solid fa-mobile-screen-button"></i> Short-form high-retention cuts</p>
+                    <h4>Shorts, Reels & TikTok Edits</h4>
+                    <p class="meta-text"><i class="fa-solid fa-mobile-screen-button"></i> Short-form vertical highlights playlist</p>
                 </div>
             </div>
         `

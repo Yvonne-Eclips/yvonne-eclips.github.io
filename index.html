@@ -37,10 +37,25 @@
                 <button class="tab-btn" data-target="page-portfolio">
                     <i class="fa-solid fa-play"></i> Portfolio
                 </button>
+                <button class="tab-btn" data-target="page-reviews">
+                    <i class="fa-solid fa-star"></i> Reviews
+                </button>
                 <button class="tab-btn" data-target="page-connect">
                     <i class="fa-solid fa-share-nodes"></i> Links & Socials
                 </button>
             </nav>
+        </div>
+
+        <!-- Twitch Status Indicator in Sidebar -->
+        <div class="twitch-status-card glass">
+            <div class="status-indicator offline">
+                <span class="pulse-dot"></span>
+                <span class="status-label">Stream: Offline</span>
+            </div>
+            <p class="status-sub">Catch live streams on Twitch when live!</p>
+            <a href="https://www.twitch.tv/yvonne_eclips" target="_blank" class="twitch-link">
+                <i class="fa-brands fa-twitch"></i> Visit Channel
+            </a>
         </div>
 
         <div class="sidebar-credits glass">
@@ -81,6 +96,17 @@
                         <button class="btn-primary" onclick="switchPage('page-commissions')"><i class="fa-solid fa-paper-plane"></i> Request Commission</button>
                         <a href="https://ytjobs.co/talent/profile/284487" target="_blank" class="btn-ytjobs"><i class="fa-solid fa-briefcase"></i> Hire on YT Jobs</a>
                     </div>
+                </div>
+            </div>
+
+            <!-- Tools & Software Bar -->
+            <div class="tools-bar glass">
+                <span class="tools-label">SOFTWARE STACK:</span>
+                <div class="tools-list">
+                    <span class="tool-chip"><i class="fa-solid fa-wand-magic-sparkles"></i> Premiere Pro</span>
+                    <span class="tool-chip"><i class="fa-solid fa-film"></i> After Effects</span>
+                    <span class="tool-chip"><i class="fa-solid fa-image"></i> Photoshop</span>
+                    <span class="tool-chip"><i class="fa-solid fa-file-audio"></i> Audacity</span>
                 </div>
             </div>
 
@@ -130,8 +156,19 @@
         <!-- PAGE 2: COMMISSIONS -->
         <section id="page-commissions" class="portal-page">
             <div class="section-title">
-                <h2>COMMISSION SERVICES</h2>
+                <h2>COMMISSION SERVICES & PRICING</h2>
                 <span class="status-pill open"><i class="fa-solid fa-circle"></i> Status: Open</span>
+            </div>
+
+            <div class="pricing-banner glass">
+                <div class="price-highlight">
+                    <span class="price-tag">€10 <small>/ min</small></span>
+                    <span class="price-desc">Base rate for final rendered video length</span>
+                </div>
+                <div class="pricing-details">
+                    <p><i class="fa-solid fa-clock glow-icon"></i> <strong>Turnaround:</strong> 2 to 4+ days (depending on current university & life schedule).</p>
+                    <p><i class="fa-solid fa-comments glow-icon"></i> <strong>Communication:</strong> Feel free to explain your vision concisely or detailed—I welcome open communication!</p>
+                </div>
             </div>
 
             <div class="services-grid">
@@ -142,6 +179,9 @@
                     </div>
                     <h3>VTuber Clip Editing</h3>
                     <p>Short-form vertical clips for TikTok, YouTube Shorts, and Reels featuring smooth pans, custom subtitles, sound effects, and clean pacing.</p>
+                    <div class="service-footer">
+                        <span class="service-price">€10 / min</span>
+                    </div>
                 </div>
 
                 <div class="service-card glass">
@@ -151,6 +191,9 @@
                     </div>
                     <h3>Full Video Editing</h3>
                     <p>Paced stream highlights, letsplays, or collab edits with customized audio balancing, meme edits, and high retention cuts.</p>
+                    <div class="service-footer">
+                        <span class="service-price">€10 / min</span>
+                    </div>
                 </div>
 
                 <div class="service-card glass">
@@ -160,6 +203,9 @@
                     </div>
                     <h3>Thumbnail Design</h3>
                     <p>Eye-catching, high CTR thumbnails designed specifically around VTuber aesthetics, stream branding, and focal points.</p>
+                    <div class="service-footer">
+                        <span class="service-price">Custom Quote</span>
+                    </div>
                 </div>
             </div>
 
@@ -178,7 +224,7 @@
             <div class="commission-callout glass">
                 <div>
                     <h3>Ready to collaborate?</h3>
-                    <p>Submit your project inquiry directly through Buy Me a Coffee or DM me on Twitter!</p>
+                    <p>DM me on Twitter with details about your project or submit an order via Buy Me a Coffee!</p>
                 </div>
                 <div class="callout-actions">
                     <a href="https://x.com/YfanTheNial" target="_blank" class="btn-tw-dm"><i class="fa-brands fa-x-twitter"></i> DM on Twitter</a>
@@ -203,7 +249,42 @@
             </div>
         </section>
 
-        <!-- PAGE 4: CONNECT / SOCIALS -->
+        <!-- PAGE 4: REVIEWS & TESTIMONIALS -->
+        <section id="page-reviews" class="portal-page">
+            <div class="section-title">
+                <h2>CLIENT REVIEWS & TESTIMONIALS</h2>
+                <a href="https://ytjobs.co/talent/profile/284487" target="_blank" class="ytjobs-pill"><i class="fa-solid fa-check-double"></i> Verified on YT Jobs</a>
+            </div>
+
+            <div class="reviews-grid">
+                <div class="review-card glass">
+                    <div class="review-header">
+                        <div class="reviewer-info">
+                            <i class="fa-solid fa-circle-user avatar-placeholder"></i>
+                            <div>
+                                <h4>Seira</h4>
+                                <span class="reviewer-tag">VTuber / Content Creator</span>
+                            </div>
+                        </div>
+                        <div class="star-rating">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="review-text">"Outstanding work on stream highlight edits! Pacing was spot-on, sound effects were well balanced, and communication was super smooth throughout the process."</p>
+                    <div class="review-footer">
+                        <a href="https://ytjobs.co/talent/share-review/284487/21536?r=375&utm_campaign=share-review&utm_ref=talent" target="_blank" class="review-verify-link">
+                            <i class="fa-solid fa-up-right-from-square"></i> Verified Review on YT Jobs
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 5: CONNECT / SOCIALS -->
         <section id="page-connect" class="portal-page">
             <div class="section-title">
                 <h2>CONNECT & HIRE ME</h2>

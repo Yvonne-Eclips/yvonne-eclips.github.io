@@ -1,8 +1,8 @@
 :root {
     --bg-dark: #0a0a0c;
-    --bg-panel: rgba(20, 20, 26, 0.7);
-    --bg-card: rgba(30, 30, 40, 0.5);
-    --border-glow: rgba(233, 30, 99, 0.3);
+    --bg-panel: rgba(20, 20, 26, 0.75);
+    --bg-card: rgba(30, 30, 42, 0.5);
+    --border-glow: rgba(233, 30, 99, 0.25);
     
     --accent-pink: #e91e63;
     --accent-purple: #9c27b0;
@@ -24,8 +24,9 @@
 body.dashboard-body {
     font-family: 'Inter', sans-serif;
     background-color: var(--bg-dark);
-    background-image: radial-gradient(circle at 10% 10%, rgba(233, 30, 99, 0.08) 0%, transparent 40%),
-                      radial-gradient(circle at 90% 80%, rgba(156, 39, 176, 0.08) 0%, transparent 40%);
+    background-image: radial-gradient(circle at 10% 10%, rgba(233, 30, 99, 0.12) 0%, transparent 40%),
+                      radial-gradient(circle at 90% 80%, rgba(156, 39, 176, 0.12) 0%, transparent 40%);
+    background-attachment: fixed;
     color: var(--text-main);
     display: flex;
     min-height: 100vh;
@@ -42,7 +43,7 @@ body.dashboard-body {
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
 }
 
-/* Sidebar */
+/* Sidebar Styling */
 #app-sidebar {
     width: var(--sidebar-width);
     background: rgba(12, 12, 16, 0.95);
@@ -60,15 +61,19 @@ body.dashboard-body {
     display: flex;
     align-items: center;
     gap: 15px;
-    margin-bottom: 40px;
+    margin-bottom: 35px;
 }
 
 .brand-avatar {
-    width: 50px;
-    height: 50px;
+    width: 55px !important;
+    height: 55px !important;
+    max-width: 55px;
+    max-height: 55px;
     border-radius: 50%;
+    object-fit: cover;
     border: 2px solid var(--accent-pink);
     box-shadow: 0 0 12px var(--border-glow);
+    flex-shrink: 0;
 }
 
 .brand-details h1 {
@@ -76,6 +81,7 @@ body.dashboard-body {
     font-size: 1.1rem;
     letter-spacing: 0.5px;
     color: #fff;
+    line-height: 1.2;
 }
 
 .vibe-tag {
@@ -107,6 +113,12 @@ body.dashboard-body {
     gap: 12px;
 }
 
+.tab-btn i {
+    width: 20px;
+    text-align: center;
+    font-size: 1.05rem;
+}
+
 .tab-btn:hover {
     color: #fff;
     background: rgba(255, 255, 255, 0.05);
@@ -114,7 +126,7 @@ body.dashboard-body {
 
 .tab-btn.active {
     color: #fff;
-    background: linear-gradient(90deg, rgba(233, 30, 99, 0.2) 0%, transparent 100%);
+    background: linear-gradient(90deg, rgba(233, 30, 99, 0.25) 0%, transparent 100%);
     border-left: 3px solid var(--accent-pink);
 }
 
@@ -123,9 +135,29 @@ body.dashboard-body {
     background: #00e676;
     color: #000;
     font-size: 0.65rem;
-    padding: 2px 8px;
+    padding: 3px 8px;
     border-radius: 20px;
     font-weight: 700;
+}
+
+.sidebar-credits {
+    padding: 15px;
+}
+
+.sub-count {
+    font-size: 0.85rem;
+    color: #fff;
+    margin-bottom: 4px;
+}
+
+.sub-count i {
+    color: #ff0000;
+    margin-right: 6px;
+}
+
+.sub-text {
+    font-size: 0.75rem;
+    color: var(--text-sub);
 }
 
 /* Viewport Area */
@@ -140,9 +172,7 @@ body.dashboard-body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 20px;
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 12px;
+    padding: 14px 22px;
     margin-bottom: 30px;
 }
 
@@ -152,21 +182,23 @@ body.dashboard-body {
 }
 
 .monster-btn {
-    background: var(--accent-pink);
+    background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
     color: #fff;
-    padding: 8px 16px;
+    padding: 8px 18px;
     border-radius: 8px;
     text-decoration: none;
     font-size: 0.85rem;
     font-weight: 600;
-    transition: transform 0.2s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    white-space: nowrap;
 }
 
 .monster-btn:hover {
     transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(233, 30, 99, 0.4);
 }
 
-/* Pages */
+/* Pages Dynamic Display */
 .portal-page {
     display: none;
     animation: fadeIn 0.4s ease forwards;
@@ -177,7 +209,7 @@ body.dashboard-body {
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
+    from { opacity: 0; transform: translateY(12px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
@@ -190,7 +222,14 @@ body.dashboard-body {
 .hero-card h2 {
     font-family: 'Space Grotesk', sans-serif;
     font-size: 2.2rem;
-    margin: 10px 0;
+    margin: 10px 0 15px 0;
+    color: #fff;
+}
+
+.hero-card p {
+    color: var(--text-sub);
+    max-width: 650px;
+    line-height: 1.6;
 }
 
 .tag {
@@ -213,17 +252,31 @@ body.dashboard-body {
     padding: 12px 24px;
     border-radius: 10px;
     font-weight: 600;
+    font-size: 0.95rem;
     cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: transform 0.2s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
 }
 
 .btn-secondary {
     background: transparent;
-    border: 1px solid var(--text-sub);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     color: #fff;
     padding: 12px 24px;
     border-radius: 10px;
     text-decoration: none;
     font-weight: 600;
+    font-size: 0.95rem;
+    transition: background 0.2s ease;
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.05);
 }
 
 /* Stats */
@@ -239,8 +292,15 @@ body.dashboard-body {
 }
 
 .stat-card h3 {
-    font-size: 2rem;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2.2rem;
     color: var(--accent-pink);
+    margin-bottom: 5px;
+}
+
+.stat-card p {
+    color: var(--text-sub);
+    font-size: 0.9rem;
 }
 
 /* Commissions Page */
@@ -251,12 +311,18 @@ body.dashboard-body {
     margin-bottom: 25px;
 }
 
+.section-title h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    letter-spacing: 1px;
+}
+
 .status-pill {
     background: rgba(0, 230, 118, 0.1);
     color: #00e676;
     padding: 6px 14px;
     border-radius: 20px;
     font-size: 0.85rem;
+    font-weight: 600;
 }
 
 .services-grid {
@@ -270,16 +336,63 @@ body.dashboard-body {
     padding: 30px;
 }
 
+.service-card h3 {
+    margin-bottom: 10px;
+    color: #fff;
+}
+
+.service-card p {
+    color: var(--text-sub);
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
 .icon-header {
-    font-size: 1.8rem;
+    font-size: 2rem;
     color: var(--accent-pink);
     margin-bottom: 15px;
 }
 
-/* Social Grid */
+.commission-callout {
+    padding: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+/* Portfolio Embed */
+.video-card {
+    padding: 20px;
+}
+
+.responsive-video {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+.responsive-video iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.video-card h4 {
+    margin-top: 15px;
+    font-weight: 600;
+}
+
+/* Social Tiles */
 .social-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 20px;
 }
 
@@ -287,20 +400,35 @@ body.dashboard-body {
     display: flex;
     align-items: center;
     gap: 15px;
-    padding: 20px;
+    padding: 22px;
     background: var(--bg-card);
+    border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: var(--radius);
     color: #fff;
     text-decoration: none;
     font-weight: 600;
-    transition: background 0.3s ease;
+    font-size: 1.05rem;
+    transition: all 0.3s ease;
 }
+
+.social-tile i {
+    font-size: 1.6rem;
+}
+
+.social-tile.yt i { color: #ff0000; }
+.social-tile.tw i { color: #1da1f2; }
+.social-tile.twitch i { color: #9146ff; }
+.social-tile.discord i { color: #5865f2; }
+.social-tile.insta i { color: #e1306c; }
+.social-tile.bmac i { color: #ffdd00; }
 
 .social-tile:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
 }
 
-/* Responsive */
+/* Responsive Mobile Layout */
 @media (max-width: 900px) {
     body.dashboard-body {
         flex-direction: column;
@@ -313,5 +441,10 @@ body.dashboard-body {
     #app-viewport {
         margin-left: 0;
         padding: 20px;
+    }
+    .top-announcement {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
     }
 }

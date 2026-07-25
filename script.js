@@ -3,11 +3,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const pages = document.querySelectorAll('.portal-page');
 
     function switchPage(pageId) {
-        // Remove active class from all tabs and pages
+        // Remove active class from all tabs and section pages
         tabButtons.forEach(btn => btn.classList.remove('active'));
         pages.forEach(page => page.classList.remove('active'));
 
-        // Target matching tab and page
+        // Find target button and target section page
         const targetBtn = document.querySelector(`[data-target="${pageId}"]`);
         const targetPage = document.getElementById(pageId);
 
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Add click event listeners to tabs
+    // Add click listeners to tab buttons
     tabButtons.forEach(button => {
         button.addEventListener('click', () => {
             const pageId = button.getAttribute('data-target');
@@ -25,6 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Make switchPage globally accessible for embedded links/buttons
+    // Make switchPage globally accessible for embedded buttons
     window.switchPage = switchPage;
 });

@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <div class="card-info">
                     <h4>Latest VTuber Highlights & Stream Edits</h4>
-                    <p class="meta-text"><i class="fa-solid fa-rotate"></i> Auto-updated playlist feed</p>
+                    <p class="meta-text"><i class="fa-solid fa-rotate"></i> Auto-updated channel uploads feed</p>
                 </div>
             </div>
         `,

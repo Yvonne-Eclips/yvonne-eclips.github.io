@@ -64,16 +64,16 @@ body.dashboard-body {
     margin-bottom: 35px;
 }
 
-.brand-avatar {
-    width: 55px !important;
-    height: 55px !important;
-    max-width: 55px;
-    max-height: 55px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid var(--accent-pink);
-    box-shadow: 0 0 12px var(--border-glow);
-    flex-shrink: 0;
+/* Force avatar size constraint */
+.brand-avatar, 
+.sidebar-brand img {
+    width: 50px !important;
+    height: 50px !important;
+    max-width: 50px !important;
+    max-height: 50px !important;
+    border-radius: 50% !important;
+    object-fit: cover !important;
+    display: block !important;
 }
 
 .brand-details h1 {

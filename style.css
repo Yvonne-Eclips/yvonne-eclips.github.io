@@ -853,3 +853,8 @@ body.dashboard-body {
         justify-content: center;
     }
 }
+
+/* Outlines every element on the page */
+* {
+  outline: 1px solid red !important;
+}
